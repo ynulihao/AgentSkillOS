@@ -1,34 +1,21 @@
 ---
 name: firecrawl-scraper
-description: |
-  Complete knowledge domain for Firecrawl v2 API - web scraping and crawling that converts websites into LLM-ready markdown or structured data.
-
-  Use when: scraping websites, crawling entire sites, extracting web content, converting HTML to markdown, building web scrapers, handling dynamic JavaScript content, bypassing anti-bot protection, extracting structured data from web pages, or when encountering "content not loading", "JavaScript rendering issues", or "blocked by bot detection".
-
-  Keywords: firecrawl, firecrawl api, web scraping, web crawler, scrape website, crawl website, extract content, html to markdown, site crawler, content extraction, web automation, firecrawl-py, firecrawl-js, llm ready data, structured data extraction, bot bypass, javascript rendering, scraping api, crawling api, map urls, batch scraping
+description: "Scrape and crawl websites using the Firecrawl v2 API to produce LLM-ready markdown or structured data. Use when scraping JavaScript-heavy sites, crawling entire documentation sites for RAG, extracting structured product data with AI, bypassing anti-bot protection, or troubleshooting content-not-loading and bot-detection issues. Supports Python (firecrawl-py) and Node.js (@mendable/firecrawl-js) SDKs."
 license: MIT
 ---
 
-# Firecrawl Web Scraper Skill
+# Firecrawl Web Scraper
 
-**Status**: Production Ready ✅
-**Last Updated**: 2025-10-24
-**Official Docs**: https://docs.firecrawl.dev
-**API Version**: v2
+**API Version**: v2 | **Docs**: https://docs.firecrawl.dev
 
----
+## Workflow
 
-## What is Firecrawl?
-
-Firecrawl is a **Web Data API for AI** that turns entire websites into LLM-ready markdown or structured data. It handles:
-
-- **JavaScript rendering** - Executes client-side JavaScript to capture dynamic content
-- **Anti-bot bypass** - Gets past CAPTCHA and bot detection systems
-- **Format conversion** - Outputs as markdown, JSON, or structured data
-- **Screenshot capture** - Saves visual representations of pages
-- **Browser automation** - Full headless browser capabilities
-
----
+1. **Install SDK** -- `pip install firecrawl-py` or `npm install @mendable/firecrawl-js`
+2. **Set API key** -- Store `FIRECRAWL_API_KEY=fc-...` in `.env` (never hardcode)
+3. **Choose endpoint** -- `/v2/scrape` (single page), `/v2/crawl` (full site), `/v2/map` (URL discovery), `/v2/extract` (structured data)
+4. **Configure options** -- Set `formats`, `onlyMainContent`, `limit`, `waitFor` as needed
+5. **Handle results** -- Process markdown/structured data, cache locally to avoid re-scraping
+6. **Validate** -- Check for empty content (may need `waitFor` or browser `actions`)
 
 ## API Endpoints
 
@@ -361,207 +348,21 @@ content = article.get("markdown")
 
 ## Error Handling
 
-### Python
+Wrap all calls in try/catch. In Python, catch `FirecrawlException` from `firecrawl.exceptions`. In TypeScript, check `error.response` for API errors vs network errors.
 
-```python
-from firecrawl import FirecrawlApp
-from firecrawl.exceptions import FirecrawlException
+## Best Practices
 
-app = FirecrawlApp(api_key=os.environ.get("FIRECRAWL_API_KEY"))
-
-try:
-    result = app.scrape_url("https://example.com")
-except FirecrawlException as e:
-    print(f"Firecrawl error: {e}")
-except Exception as e:
-    print(f"Unexpected error: {e}")
-```
-
-### TypeScript
-
-```typescript
-import FirecrawlApp from '@mendable/firecrawl-js';
-
-const app = new FirecrawlApp({
-  apiKey: process.env.FIRECRAWL_API_KEY
-});
-
-try {
-  const result = await app.scrapeUrl('https://example.com');
-} catch (error) {
-  if (error.response) {
-    // API error
-    console.error('API Error:', error.response.data);
-  } else {
-    // Network or other error
-    console.error('Error:', error.message);
-  }
-}
-```
+- Use `onlyMainContent: true` to reduce credits and get cleaner output
+- Set reasonable `limit` on crawls to control costs
+- Use `map` endpoint first to plan crawling strategy
+- Cache results locally to avoid re-scraping
+- Handle retries with exponential backoff for transient errors
 
 ---
 
-## Rate Limits & Best Practices
+## Cloudflare Workers
 
-### Rate Limits
-- **Free tier**: 500 credits/month
-- **Paid tiers**: Higher limits based on plan
-- Credits consumed vary by endpoint and options
-
-### Best Practices
-
-1. **Use `onlyMainContent: true`** to reduce credits and get cleaner data
-2. **Set reasonable limits** on crawls to avoid excessive costs
-3. **Handle retries** with exponential backoff for transient errors
-4. **Cache results** locally to avoid re-scraping same content
-5. **Use `map` endpoint first** to plan crawling strategy
-6. **Batch extract calls** when processing multiple URLs
-7. **Monitor credit usage** in dashboard
-
----
-
-## Cloudflare Workers Integration
-
-### ⚠️ Important: SDK Compatibility
-
-**The Firecrawl SDK cannot run in Cloudflare Workers** due to Node.js dependencies (specifically `axios` which uses Node.js `http` module). Workers require Web Standard APIs.
-
-**✅ Use the direct REST API with `fetch` instead** (see example below).
-
-**Alternative**: Self-host with [workers-firecrawl](https://github.com/G4brym/workers-firecrawl) - a Workers-native implementation (requires Workers Paid Plan, only implements `/search` endpoint).
-
----
-
-### Workers Example: Direct REST API
-
-This example uses the `fetch` API to call Firecrawl directly - works perfectly in Cloudflare Workers:
-
-```typescript
-interface Env {
-  FIRECRAWL_API_KEY: string;
-  SCRAPED_CACHE?: KVNamespace; // Optional: for caching results
-}
-
-interface FirecrawlScrapeResponse {
-  success: boolean;
-  data: {
-    markdown?: string;
-    html?: string;
-    metadata: {
-      title?: string;
-      description?: string;
-      language?: string;
-      sourceURL: string;
-    };
-  };
-}
-
-export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    if (request.method !== 'POST') {
-      return Response.json({ error: 'Method not allowed' }, { status: 405 });
-    }
-
-    try {
-      const { url } = await request.json<{ url: string }>();
-
-      if (!url) {
-        return Response.json({ error: 'URL is required' }, { status: 400 });
-      }
-
-      // Check cache (optional)
-      if (env.SCRAPED_CACHE) {
-        const cached = await env.SCRAPED_CACHE.get(url, 'json');
-        if (cached) {
-          return Response.json({ cached: true, data: cached });
-        }
-      }
-
-      // Call Firecrawl API directly using fetch
-      const response = await fetch('https://api.firecrawl.dev/v2/scrape', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${env.FIRECRAWL_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          url: url,
-          formats: ['markdown'],
-          onlyMainContent: true,
-          removeBase64Images: true
-        })
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Firecrawl API error (${response.status}): ${errorText}`);
-      }
-
-      const result = await response.json<FirecrawlScrapeResponse>();
-
-      // Cache for 1 hour (optional)
-      if (env.SCRAPED_CACHE && result.success) {
-        await env.SCRAPED_CACHE.put(
-          url,
-          JSON.stringify(result.data),
-          { expirationTtl: 3600 }
-        );
-      }
-
-      return Response.json({
-        cached: false,
-        data: result.data
-      });
-
-    } catch (error) {
-      console.error('Scraping error:', error);
-      return Response.json(
-        { error: error instanceof Error ? error.message : 'Unknown error' },
-        { status: 500 }
-      );
-    }
-  }
-};
-```
-
-**Environment Setup**: Add `FIRECRAWL_API_KEY` in Wrangler secrets:
-
-```bash
-npx wrangler secret put FIRECRAWL_API_KEY
-```
-
-**Optional KV Binding** (for caching - add to `wrangler.jsonc`):
-
-```jsonc
-{
-  "kv_namespaces": [
-    {
-      "binding": "SCRAPED_CACHE",
-      "id": "your-kv-namespace-id"
-    }
-  ]
-}
-```
-
-See `templates/firecrawl-worker-fetch.ts` for a complete production-ready example.
-
----
-
-## When to Use This Skill
-
-✅ **Use Firecrawl when:**
-- Scraping modern websites with JavaScript
-- Need clean markdown output for LLMs
-- Building RAG systems from web content
-- Extracting structured data at scale
-- Dealing with bot protection
-- Need reliable, production-ready scraping
-
-❌ **Don't use Firecrawl when:**
-- Scraping simple static HTML (use cheerio/beautifulsoup)
-- Have existing Puppeteer/Playwright setup working well
-- Working with APIs (use direct API calls instead)
-- Budget constraints (free tier has limits)
+The Firecrawl SDK cannot run in Workers (Node.js dependencies). Use the direct REST API with `fetch` instead. See `templates/firecrawl-worker-fetch.ts` for a production-ready example.
 
 ---
 
@@ -671,19 +472,3 @@ crawl = app.crawl_url(
 - **Node.js SDK**: https://docs.firecrawl.dev/sdks/node
 - **API Reference**: https://docs.firecrawl.dev/api-reference
 - **GitHub**: https://github.com/mendableai/firecrawl
-- **Dashboard**: https://www.firecrawl.dev/app
-
----
-
-## Next Steps After Using This Skill
-
-1. **Store scraped data**: Use Cloudflare D1, R2, or KV to persist results
-2. **Build RAG system**: Combine with Vectorize for semantic search
-3. **Add scheduling**: Use Cloudflare Queues for recurring scrapes
-4. **Process content**: Use Workers AI to analyze scraped data
-
----
-
-**Token Savings**: ~60% vs manual integration
-**Error Prevention**: API authentication, rate limiting, format handling
-**Production Ready**: ✅

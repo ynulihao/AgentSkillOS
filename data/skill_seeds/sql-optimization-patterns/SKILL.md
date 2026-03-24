@@ -1,133 +1,59 @@
 ---
 name: sql-optimization-patterns
-description: Master SQL query optimization, indexing strategies, and EXPLAIN analysis to dramatically improve database performance and eliminate slow queries. Use when debugging slow queries, designing database schemas, or optimizing application performance.
+description: "Use when debugging slow SQL queries, designing database schemas, analyzing EXPLAIN plans, implementing indexes, or resolving N+1 query problems. Provides systematic optimization patterns for PostgreSQL and MySQL including indexing strategies, query rewrites, pagination, batching, and advanced techniques like materialized views and partitioning."
 ---
 
 # SQL Optimization Patterns
 
-Transform slow database queries into lightning-fast operations through systematic optimization, proper indexing, and query plan analysis.
-
-## When to Use This Skill
-
-- Debugging slow-running queries
-- Designing performant database schemas
-- Optimizing application response times
-- Reducing database load and costs
-- Improving scalability for growing datasets
-- Analyzing EXPLAIN query plans
-- Implementing efficient indexes
-- Resolving N+1 query problems
+Systematic approach to transforming slow queries into performant operations through EXPLAIN analysis, proper indexing, and query optimization.
 
 ## Core Concepts
 
 ### 1. Query Execution Plans (EXPLAIN)
 
-Understanding EXPLAIN output is fundamental to optimization.
-
-**PostgreSQL EXPLAIN:**
 ```sql
 -- Basic explain
 EXPLAIN SELECT * FROM users WHERE email = 'user@example.com';
 
--- With actual execution stats
-EXPLAIN ANALYZE
-SELECT * FROM users WHERE email = 'user@example.com';
-
--- Verbose output with more details
+-- With execution stats (preferred for debugging)
 EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
 SELECT u.*, o.order_total
-FROM users u
-JOIN orders o ON u.id = o.user_id
+FROM users u JOIN orders o ON u.id = o.user_id
 WHERE u.created_at > NOW() - INTERVAL '30 days';
 ```
 
-**Key Metrics to Watch:**
-- **Seq Scan**: Full table scan (usually slow for large tables)
-- **Index Scan**: Using index (good)
-- **Index Only Scan**: Using index without touching table (best)
-- **Nested Loop**: Join method (okay for small datasets)
-- **Hash Join**: Join method (good for larger datasets)
-- **Merge Join**: Join method (good for sorted data)
-- **Cost**: Estimated query cost (lower is better)
-- **Rows**: Estimated rows returned
-- **Actual Time**: Real execution time
+**Key metrics:** Seq Scan (full table scan, usually slow) vs Index Scan (good) vs Index Only Scan (best). Watch Cost, Rows estimates, Actual Time, and join methods (Nested Loop for small sets, Hash Join for larger, Merge Join for sorted).
 
 ### 2. Index Strategies
 
-Indexes are the most powerful optimization tool.
-
-**Index Types:**
-- **B-Tree**: Default, good for equality and range queries
-- **Hash**: Only for equality (=) comparisons
-- **GIN**: Full-text search, array queries, JSONB
-- **GiST**: Geometric data, full-text search
-- **BRIN**: Block Range INdex for very large tables with correlation
+| Type | Use Case |
+|------|----------|
+| B-Tree | Default: equality and range queries |
+| Hash | Equality (=) only |
+| GIN | Full-text search, arrays, JSONB |
+| GiST | Geometric data, full-text |
+| BRIN | Very large tables with correlation |
 
 ```sql
--- Standard B-Tree index
-CREATE INDEX idx_users_email ON users(email);
-
--- Composite index (order matters!)
+-- Composite index (column order matters!)
 CREATE INDEX idx_orders_user_status ON orders(user_id, status);
 
--- Partial index (index subset of rows)
-CREATE INDEX idx_active_users ON users(email)
-WHERE status = 'active';
+-- Partial index (subset of rows)
+CREATE INDEX idx_active_users ON users(email) WHERE status = 'active';
+
+-- Covering index (avoid table lookups)
+CREATE INDEX idx_users_email_covering ON users(email) INCLUDE (name, created_at);
 
 -- Expression index
 CREATE INDEX idx_users_lower_email ON users(LOWER(email));
-
--- Covering index (include additional columns)
-CREATE INDEX idx_users_email_covering ON users(email)
-INCLUDE (name, created_at);
-
--- Full-text search index
-CREATE INDEX idx_posts_search ON posts
-USING GIN(to_tsvector('english', title || ' ' || body));
-
--- JSONB index
-CREATE INDEX idx_metadata ON events USING GIN(metadata);
 ```
 
-### 3. Query Optimization Patterns
+### 3. Query Optimization Fundamentals
 
-**Avoid SELECT \*:**
+**Select only needed columns** instead of `SELECT *`. **Avoid functions in WHERE** that prevent index usage (use expression indexes instead). **Use explicit JOINs** with pre-filtered subqueries:
+
 ```sql
--- Bad: Fetches unnecessary columns
-SELECT * FROM users WHERE id = 123;
-
--- Good: Fetch only what you need
-SELECT id, email, name FROM users WHERE id = 123;
-```
-
-**Use WHERE Clause Efficiently:**
-```sql
--- Bad: Function prevents index usage
-SELECT * FROM users WHERE LOWER(email) = 'user@example.com';
-
--- Good: Create functional index or use exact match
-CREATE INDEX idx_users_email_lower ON users(LOWER(email));
--- Then:
-SELECT * FROM users WHERE LOWER(email) = 'user@example.com';
-
--- Or store normalized data
-SELECT * FROM users WHERE email = 'user@example.com';
-```
-
-**Optimize JOINs:**
-```sql
--- Bad: Cartesian product then filter
-SELECT u.name, o.total
-FROM users u, orders o
-WHERE u.id = o.user_id AND u.created_at > '2024-01-01';
-
--- Good: Filter before join
-SELECT u.name, o.total
-FROM users u
-JOIN orders o ON u.id = o.user_id
-WHERE u.created_at > '2024-01-01';
-
--- Better: Filter both tables
+-- Better: Filter both tables before join
 SELECT u.name, o.total
 FROM (SELECT * FROM users WHERE created_at > '2024-01-01') u
 JOIN orders o ON u.id = o.user_id;

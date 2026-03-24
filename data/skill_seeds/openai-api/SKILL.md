@@ -1,52 +1,21 @@
 ---
 name: openai-api
-description: |
-  Build with OpenAI's stateless APIs - Chat Completions (GPT-5, GPT-4o), Embeddings, Images (DALL-E 3), Audio (Whisper + TTS), and Moderation. Includes Node.js SDK and fetch-based approaches for Cloudflare Workers.
-
-  Use when: implementing chat completions with GPT-5/GPT-4o, streaming responses with SSE, using function calling/tools, creating structured outputs with JSON schemas, generating embeddings for RAG (text-embedding-3-small/large), generating images with DALL-E 3, editing images with GPT-Image-1, transcribing audio with Whisper, synthesizing speech with TTS (11 voices), moderating content (11 safety categories), or troubleshooting rate limits (429), invalid API keys (401), function calling failures, streaming parse errors, embeddings dimension mismatches, or token limit exceeded.
+description: "Build with OpenAI's stateless Chat Completions, Embeddings, Images, Audio, and Moderation APIs. Use when implementing GPT-5/GPT-4o chat completions, streaming SSE responses, adding function calling or structured JSON outputs, generating embeddings for RAG, creating images with DALL-E 3, transcribing audio with Whisper, synthesizing speech with TTS, or troubleshooting 401/429 errors. Covers Node.js SDK and fetch-based approaches for Cloudflare Workers."
 ---
 
-# OpenAI API - Complete Guide
+# OpenAI API
 
-**Version**: Production Ready ✅
-**Package**: openai@6.9.1
-**Last Updated**: 2025-11-26
+**Package**: `openai@6.9.1` | **API**: Stateless
 
----
+## Workflow
 
-## Status
-
-**✅ Production Ready**:
-- ✅ Chat Completions API (GPT-5, GPT-4o, GPT-4 Turbo)
-- ✅ Embeddings API (text-embedding-3-small, text-embedding-3-large)
-- ✅ Images API (DALL-E 3 generation + GPT-Image-1 editing)
-- ✅ Audio API (Whisper transcription + TTS with 11 voices)
-- ✅ Moderation API (11 safety categories)
-- ✅ Streaming patterns (SSE)
-- ✅ Function calling / Tools
-- ✅ Structured outputs (JSON schemas)
-- ✅ Vision (GPT-4o)
-- ✅ Both Node.js SDK and fetch approaches
-
----
-
-## Table of Contents
-
-1. [Quick Start](#quick-start)
-2. [Chat Completions API](#chat-completions-api)
-3. [GPT-5 Series Models](#gpt-5-series-models)
-4. [Streaming Patterns](#streaming-patterns)
-5. [Function Calling](#function-calling)
-6. [Structured Outputs](#structured-outputs)
-7. [Vision (GPT-4o)](#vision-gpt-4o)
-8. [Embeddings API](#embeddings-api)
-9. [Images API](#images-api)
-10. [Audio API](#audio-api)
-11. [Moderation API](#moderation-api)
-12. [Error Handling](#error-handling)
-13. [Rate Limits](#rate-limits)
-14. [Production Best Practices](#production-best-practices)
-15. [Relationship to openai-responses](#relationship-to-openai-responses)
+1. **Install and configure** -- `npm install openai@6.9.1`, set `OPENAI_API_KEY` in env
+2. **Select model** -- GPT-5.1 (reasoning), GPT-5 (balanced), GPT-4o (vision/multimodal), GPT-5-mini (cost-effective)
+3. **Choose API** -- Chat Completions, Embeddings, Images, Audio, or Moderation
+4. **Implement** -- Use Node.js SDK or fetch (for Cloudflare Workers)
+5. **Add streaming** -- Set `stream: true` for responses >100 tokens
+6. **Handle errors** -- Implement exponential backoff for 429s, validate API keys
+7. **Validate** -- Check token usage, test tool calls loop to completion, verify structured output parsing
 
 ---
 
@@ -146,36 +115,9 @@ The Chat Completions API is the core interface for interacting with OpenAI's lan
 }
 ```
 
-### Response Structure
+**Response**: Access generated text via `completion.choices[0].message.content`. Check `finish_reason` for "stop" (complete), "length" (truncated), or "tool_calls" (function calling).
 
-```typescript
-{
-  id: string,                 // Unique completion ID
-  object: "chat.completion",
-  created: number,            // Unix timestamp
-  model: string,              // Model used
-  choices: [{
-    index: number,
-    message: {
-      role: "assistant",
-      content: string,        // Generated text
-      tool_calls?: ToolCall[] // If function calling
-    },
-    finish_reason: string     // "stop" | "length" | "tool_calls"
-  }],
-  usage: {
-    prompt_tokens: number,
-    completion_tokens: number,
-    total_tokens: number
-  }
-}
-```
-
-### Message Roles & Multi-turn Conversations
-
-Three roles: **system** (behavior), **user** (input), **assistant** (model responses).
-
-**Important**: API is **stateless** - send full conversation history each request. For stateful conversations, use `openai-responses` skill.
+**Message roles**: `system` (behavior), `user` (input), `assistant` (model responses). API is stateless -- send full conversation history each request.
 
 ---
 
@@ -252,55 +194,7 @@ for await (const chunk of stream) {
 }
 ```
 
-### Fetch (Cloudflare Workers)
-```typescript
-const response = await fetch('https://api.openai.com/v1/chat/completions', {
-  method: 'POST',
-  headers: {
-    'Authorization': `Bearer ${env.OPENAI_API_KEY}`,
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    model: 'gpt-5.1',
-    messages: [{ role: 'user', content: 'Write a poem' }],
-    stream: true,
-  }),
-});
-
-const reader = response.body?.getReader();
-const decoder = new TextDecoder();
-
-while (true) {
-  const { done, value } = await reader!.read();
-  if (done) break;
-
-  const chunk = decoder.decode(value);
-  const lines = chunk.split('\n').filter(line => line.trim() !== '');
-
-  for (const line of lines) {
-    if (line.startsWith('data: ')) {
-      const data = line.slice(6);
-      if (data === '[DONE]') break;
-
-      try {
-        const json = JSON.parse(data);
-        const content = json.choices[0]?.delta?.content || '';
-        console.log(content);
-      } catch (e) {
-        // Skip invalid JSON
-      }
-    }
-  }
-}
-```
-
-**Server-Sent Events (SSE) format**:
-```
-data: {"id":"chatcmpl-xyz","choices":[{"delta":{"content":"Hello"}}]}
-data: [DONE]
-```
-
-**Key Points**: Handle incomplete chunks, `[DONE]` signal, and invalid JSON gracefully.
+For **fetch-based streaming** (Cloudflare Workers): Read the response body with `getReader()`, parse SSE lines starting with `data: `, handle `[DONE]` signal, and skip invalid JSON chunks gracefully.
 
 ---
 
@@ -402,23 +296,7 @@ const person = JSON.parse(completion.choices[0].message.content);
 // { name: "Alice", age: 28, skills: ["TypeScript", "React"] }
 ```
 
-### JSON Mode (Simple)
-
-For simpler use cases without strict schema validation:
-
-```typescript
-const completion = await openai.chat.completions.create({
-  model: 'gpt-5',
-  messages: [
-    { role: 'user', content: 'List 3 programming languages as JSON' }
-  ],
-  response_format: { type: 'json_object' }
-});
-
-const data = JSON.parse(completion.choices[0].message.content);
-```
-
-**Important**: When using `response_format`, include "JSON" in your prompt to guide the model.
+For simple JSON without strict schemas, use `response_format: { type: 'json_object' }`. Always include "JSON" in the prompt.
 
 ---
 
@@ -448,50 +326,7 @@ const completion = await openai.chat.completions.create({
 });
 ```
 
-### Image via Base64
-
-```typescript
-import fs from 'fs';
-
-const imageBuffer = fs.readFileSync('./image.jpg');
-const base64Image = imageBuffer.toString('base64');
-
-const completion = await openai.chat.completions.create({
-  model: 'gpt-4o',
-  messages: [
-    {
-      role: 'user',
-      content: [
-        { type: 'text', text: 'Describe this image in detail' },
-        {
-          type: 'image_url',
-          image_url: {
-            url: `data:image/jpeg;base64,${base64Image}`
-          }
-        }
-      ]
-    }
-  ]
-});
-```
-
-### Multiple Images
-
-```typescript
-const completion = await openai.chat.completions.create({
-  model: 'gpt-4o',
-  messages: [
-    {
-      role: 'user',
-      content: [
-        { type: 'text', text: 'Compare these two images' },
-        { type: 'image_url', image_url: { url: 'https://example.com/image1.jpg' } },
-        { type: 'image_url', image_url: { url: 'https://example.com/image2.jpg' } }
-      ]
-    }
-  ]
-});
-```
+For base64 images, use `data:image/jpeg;base64,${base64String}` as the URL. Multiple images can be passed in the same `content` array.
 
 ---
 
@@ -514,28 +349,7 @@ const embedding = await openai.embeddings.create({
 // Returns: { data: [{ embedding: [0.002, -0.009, ...] }] }
 ```
 
-### Custom Dimensions (OpenAI-Specific)
-```typescript
-const embedding = await openai.embeddings.create({
-  model: 'text-embedding-3-small',
-  input: 'Sample text',
-  dimensions: 256, // Reduced from 1536 default
-});
-```
-
-**Benefits**: 4x-12x storage reduction, faster search, minimal quality loss.
-
-### Batch Processing
-```typescript
-const embeddings = await openai.embeddings.create({
-  model: 'text-embedding-3-small',
-  input: ['First doc', 'Second doc', 'Third doc'],
-});
-```
-
-**Limits**: 8192 tokens/input, 300k tokens total across batch, 2048 max array size.
-
-**Key Points**: Use custom dimensions for efficiency, batch up to 2048 docs, cache embeddings (deterministic).
+Use `dimensions` parameter to reduce vector size (e.g., 256 instead of 1536) for 4x-12x storage savings. Batch up to 2048 inputs per request (8192 tokens/input max). Embeddings are deterministic -- cache them.
 
 ---
 
@@ -565,33 +379,9 @@ console.log(image.data[0].revised_prompt); // DALL-E 3 may revise for safety
 
 ### Image Editing (GPT-Image-1)
 
-**Endpoint**: `POST /v1/images/edits`
+**Endpoint**: `POST /v1/images/edits` (uses `multipart/form-data`, not JSON)
 
-**Important**: Uses `multipart/form-data`, not JSON.
-
-```typescript
-import FormData from 'form-data';
-
-const formData = new FormData();
-formData.append('model', 'gpt-image-1');
-formData.append('image', fs.createReadStream('./woman.jpg'));
-formData.append('image_2', fs.createReadStream('./logo.png')); // Optional composite
-formData.append('prompt', 'Add the logo to the fabric.');
-formData.append('input_fidelity', 'high'); // low|medium|high
-formData.append('format', 'png'); // Supports transparency
-formData.append('background', 'transparent'); // transparent|white|black
-
-const response = await fetch('https://api.openai.com/v1/images/edits', {
-  method: 'POST',
-  headers: {
-    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-    ...formData.getHeaders(),
-  },
-  body: formData,
-});
-```
-
-**GPT-Image-1 Features**: Supports transparency (PNG/WebP), compositing with image_2, output compression control.
+Supports transparency (PNG/WebP), compositing with `image_2`, and output compression control. Send image files via FormData.
 
 ---
 
@@ -632,36 +422,7 @@ const mp3 = await openai.audio.speech.create({
 });
 ```
 
-### Voice Instructions (gpt-4o-mini-tts Only)
-
-```typescript
-const speech = await openai.audio.speech.create({
-  model: 'gpt-4o-mini-tts',
-  voice: 'nova',
-  input: 'Welcome to support.',
-  instructions: 'Speak in a calm, professional tone.', // Custom voice control
-});
-```
-
-### Streaming TTS (gpt-4o-mini-tts Only)
-
-```typescript
-const response = await fetch('https://api.openai.com/v1/audio/speech', {
-  method: 'POST',
-  headers: {
-    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    model: 'gpt-4o-mini-tts',
-    voice: 'nova',
-    input: 'Long text...',
-    stream_format: 'sse', // Server-Sent Events
-  }),
-});
-```
-
-**Note**: `instructions` and `stream_format: "sse"` only work with gpt-4o-mini-tts.
+**gpt-4o-mini-tts** additionally supports `instructions` (custom voice control) and `stream_format: "sse"` for streaming audio.
 
 ---
 
@@ -682,32 +443,7 @@ console.log(moderation.results[0].categories);
 console.log(moderation.results[0].category_scores); // 0.0-1.0
 ```
 
-### 11 Safety Categories
-
-1. **sexual**: Sexual content
-2. **hate**: Hateful content based on identity
-3. **harassment**: Bullying, intimidation
-4. **self-harm**: Promoting self-harm
-5. **sexual/minors**: Child sexualization (CSAM)
-6. **hate/threatening**: Violent threats based on identity
-7. **violence/graphic**: Extreme gore
-8. **self-harm/intent**: Suicidal ideation
-9. **self-harm/instructions**: Self-harm how-to guides
-10. **harassment/threatening**: Violent personal threats
-11. **violence**: Violence threats/glorification
-
-**Scores**: 0.0 (low confidence) to 1.0 (high confidence)
-
-### Batch Moderation
-
-```typescript
-const moderation = await openai.moderations.create({
-  model: 'omni-moderation-latest',
-  input: ['Text 1', 'Text 2', 'Text 3'],
-});
-```
-
-**Best Practices**: Use lower thresholds for severe categories (sexual/minors: 0.1, self-harm/intent: 0.2), batch requests, fail closed on errors.
+**11 categories**: sexual, hate, harassment, self-harm, violence (plus sub-categories like sexual/minors, hate/threatening, etc.). Scores range 0.0-1.0. Supports batch input as arrays. Use lower thresholds for severe categories.
 
 ---
 
@@ -735,137 +471,20 @@ async function completionWithRetry(params, maxRetries = 3) {
 }
 ```
 
-### Rate Limit Headers (OpenAI-Specific)
+Check `x-ratelimit-remaining-requests` header. Limits vary by tier/model (RPM, TPM, IPM).
 
-```typescript
-response.headers.get('x-ratelimit-limit-requests');
-response.headers.get('x-ratelimit-remaining-requests');
-response.headers.get('x-ratelimit-reset-requests');
-```
-
-**Limits**: Based on RPM (Requests/Min), TPM (Tokens/Min), IPM (Images/Min). Varies by tier and model.
+**Production tips**: Never expose API keys client-side. Stream responses >100 tokens. Use `reasoning_effort: 'none'` for simple tasks to reduce cost.
 
 ---
 
-## Production Best Practices
+## When to Use openai-api vs openai-responses
 
-**Security**: Never expose API keys client-side, use server-side proxy, store keys in environment variables.
+| Need | openai-api (this skill) | openai-responses |
+|---|---|---|
+| Simple chat, one-off generation | Yes | No |
+| Embeddings, images, audio, moderation | Yes | No |
+| Agentic multi-turn with built-in tools | No | Yes |
+| Stateful conversation management | No | Yes |
+| Cloudflare Workers / edge deployment | Yes | No |
 
-**Performance**: Stream responses >100 tokens, set max_tokens appropriately, cache deterministic responses.
-
-**Cost**: Use gpt-5.1 with reasoning_effort: 'none' for simple tasks, gpt-5.1 with 'high' for complex reasoning.
-
----
-
-## Relationship to openai-responses
-
-### openai-api (This Skill)
-
-**Traditional/stateless API** for:
-- ✅ Simple chat completions
-- ✅ Embeddings for RAG/search
-- ✅ Images (DALL-E 3)
-- ✅ Audio (Whisper/TTS)
-- ✅ Content moderation
-- ✅ One-off text generation
-- ✅ Cloudflare Workers / edge deployment
-
-**Characteristics**:
-- Stateless (you manage conversation history)
-- No built-in tools
-- Maximum flexibility
-- Works everywhere (Node.js, browsers, Workers, etc.)
-
-### openai-responses Skill
-
-**Stateful/agentic API** for:
-- ✅ Automatic conversation state management
-- ✅ Preserved reasoning (Chain of Thought) across turns
-- ✅ Built-in tools (Code Interpreter, File Search, Web Search, Image Generation)
-- ✅ MCP server integration
-- ✅ Background mode for long tasks
-- ✅ Polymorphic outputs
-
-**Characteristics**:
-- Stateful (OpenAI manages conversation)
-- Built-in tools included
-- Better for agentic workflows
-- Higher-level abstraction
-
-### When to Use Which?
-
-| Use Case | Use openai-api | Use openai-responses |
-|----------|----------------|---------------------|
-| Simple chat | ✅ | ❌ |
-| RAG/embeddings | ✅ | ❌ |
-| Image generation | ✅ | ✅ |
-| Audio processing | ✅ | ❌ |
-| Agentic workflows | ❌ | ✅ |
-| Multi-turn reasoning | ❌ | ✅ |
-| Background tasks | ❌ | ✅ |
-| Custom tools only | ✅ | ❌ |
-| Built-in + custom tools | ❌ | ✅ |
-
-**Use both**: Many apps use openai-api for embeddings/images/audio and openai-responses for conversational agents.
-
----
-
-## Dependencies
-
-```bash
-npm install openai@6.9.1
-```
-
-**Environment**: `OPENAI_API_KEY=sk-...`
-
-**TypeScript**: Fully typed with included definitions.
-
----
-
-## Official Documentation
-
-### Core APIs
-- **Chat Completions**: https://platform.openai.com/docs/api-reference/chat/create
-- **Embeddings**: https://platform.openai.com/docs/api-reference/embeddings
-- **Images**: https://platform.openai.com/docs/api-reference/images
-- **Audio**: https://platform.openai.com/docs/api-reference/audio
-- **Moderation**: https://platform.openai.com/docs/api-reference/moderations
-
-### Guides
-- **GPT-5 Guide**: https://platform.openai.com/docs/guides/latest-model
-- **Function Calling**: https://platform.openai.com/docs/guides/function-calling
-- **Structured Outputs**: https://platform.openai.com/docs/guides/structured-outputs
-- **Vision**: https://platform.openai.com/docs/guides/vision
-- **Rate Limits**: https://platform.openai.com/docs/guides/rate-limits
-- **Error Codes**: https://platform.openai.com/docs/guides/error-codes
-
-### SDKs
-- **Node.js SDK**: https://github.com/openai/openai-node
-- **Python SDK**: https://github.com/openai/openai-python
-
----
-
-## What's Next?
-
-**✅ Skill Complete - Production Ready**
-
-All API sections documented:
-- ✅ Chat Completions API (GPT-5, GPT-4o, streaming, function calling)
-- ✅ Embeddings API (text-embedding-3-small, text-embedding-3-large, RAG patterns)
-- ✅ Images API (DALL-E 3 generation, GPT-Image-1 editing)
-- ✅ Audio API (Whisper transcription, TTS with 11 voices)
-- ✅ Moderation API (11 safety categories)
-
-**Remaining Tasks**:
-1. Create 9 additional templates
-2. Create 7 reference documentation files
-3. Test skill installation and auto-discovery
-4. Update roadmap and commit
-
-See `/planning/research-logs/openai-api.md` for complete research notes.
-
----
-
-**Token Savings**: ~60% (12,500 tokens saved vs manual implementation)
-**Errors Prevented**: 10+ documented common issues
-**Production Tested**: Ready for immediate use
+Many apps use both: openai-api for embeddings/images/audio and openai-responses for conversational agents.

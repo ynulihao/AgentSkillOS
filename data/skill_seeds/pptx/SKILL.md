@@ -1,14 +1,10 @@
 ---
 name: pptx
-description: "Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks"
+description: "Use when creating, editing, or analyzing PowerPoint presentations (.pptx). Supports new presentation creation via html2pptx, template-based workflows with slide rearrangement and text replacement, OOXML editing for existing slides, text extraction, thumbnail generation, and visual validation."
 license: Proprietary. LICENSE.txt has complete terms
 ---
 
-# PPTX creation, editing, and analysis
-
-## Overview
-
-A user may ask you to create, edit, or analyze the contents of a .pptx file. A .pptx file is essentially a ZIP archive containing XML files and other resources that you can read or edit. You have different tools and workflows available for different tasks.
+# PPTX Creation, Editing, and Analysis
 
 ## Reading and analyzing content
 

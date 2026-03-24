@@ -1,130 +1,68 @@
 ---
 name: canvas-design
-description: Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations.
+description: "Use when the user asks to create a poster, piece of art, visual design, or other static visual work. Generates original visual art as .png and .pdf files by first creating a design philosophy manifesto, then expressing it on a canvas with museum-quality craftsmanship. Outputs .md (philosophy), .pdf, and .png files."
 license: Complete terms in LICENSE.txt
 ---
 
-These are instructions for creating design philosophies - aesthetic movements that are then EXPRESSED VISUALLY. Output only .md files, .pdf files, and .png files.
+# Canvas Design
 
-Complete this in two steps:
-1. Design Philosophy Creation (.md file)
-2. Express by creating it on a canvas (.pdf file or .png file)
+Create original visual art through design philosophy — aesthetic movements expressed as museum-quality visual compositions.
 
-First, undertake this task:
+## Workflow
 
-## DESIGN PHILOSOPHY CREATION
+1. **Create design philosophy** — Write a visual philosophy manifesto (.md file) inspired by the user's input
+2. **Deduce the subtle reference** — Identify the conceptual thread from the request to weave invisibly into the art
+3. **Express on canvas** — Render the philosophy as a single-page .pdf or .png with expert craftsmanship
+4. **Refine to perfection** — Take a second pass to polish the composition without adding new elements
+5. **Deliver** — Output the final .pdf/.png alongside the design philosophy .md file
 
-To begin, create a VISUAL PHILOSOPHY (not layouts or templates) that will be interpreted through:
-- Form, space, color, composition
-- Images, graphics, shapes, patterns
-- Minimal text as visual accent
+## Step 1: Design Philosophy Creation
 
-### THE CRITICAL UNDERSTANDING
-- What is received: Some subtle input or instructions by the user that should be taken into account, but used as a foundation; it should not constrain creative freedom.
-- What is created: A design philosophy/aesthetic movement.
-- What happens next: Then, the same version receives the philosophy and EXPRESSES IT VISUALLY - creating artifacts that are 90% visual design, 10% essential text.
+Create a VISUAL PHILOSOPHY (not layouts or templates) interpreted through form, space, color, and composition. The user's input is a foundation — it should not constrain creative freedom.
 
-Consider this approach:
-- Write a manifesto for an art movement
-- The next phase involves making the artwork
+**How to generate:**
 
-The philosophy must emphasize: Visual expression. Spatial communication. Artistic interpretation. Minimal words.
+- **Name the movement** (1-2 words): e.g., "Brutalist Joy", "Chromatic Silence", "Metabolist Dreams"
+- **Articulate the philosophy** (4-6 paragraphs) covering: space and form, color and material, scale and rhythm, composition and balance, visual hierarchy
 
-### HOW TO GENERATE A VISUAL PHILOSOPHY
+**Critical guidelines:**
+- Avoid redundancy — each design aspect mentioned once unless adding new depth
+- Emphasize craftsmanship repeatedly — "meticulously crafted," "painstaking attention," "master-level execution"
+- Leave creative space for interpretive choices during canvas creation
+- The philosophy must guide VISUAL expression, not text. Information lives in design, not paragraphs.
 
-**Name the movement** (1-2 words): "Brutalist Joy" / "Chromatic Silence" / "Metabolist Dreams"
+**Philosophy examples (condensed):**
 
-**Articulate the philosophy** (4-6 paragraphs - concise but complete):
+- **"Concrete Poetry"**: Massive color blocks, sculptural typography, Brutalist spatial divisions, Polish poster energy meets Le Corbusier
+- **"Chromatic Language"**: Geometric precision where color zones create meaning, Josef Albers meets data visualization
+- **"Analog Meditation"**: Paper grain, ink bleeds, vast negative space, Japanese photobook aesthetic
+- **"Organic Systems"**: Rounded forms, organic arrangements, natural color through architecture
+- **"Geometric Silence"**: Grid-based precision, dramatic negative space, Swiss formalism meets Brutalist honesty
 
-To capture the VISUAL essence, express how the philosophy manifests through:
-- Space and form
-- Color and material
-- Scale and rhythm
-- Composition and balance
-- Visual hierarchy
+Output the philosophy as a .md file.
 
-**CRITICAL GUIDELINES:**
-- **Avoid redundancy**: Each design aspect should be mentioned once. Avoid repeating points about color theory, spatial relationships, or typographic principles unless adding new depth.
-- **Emphasize craftsmanship REPEATEDLY**: The philosophy MUST stress multiple times that the final work should appear as though it took countless hours to create, was labored over with care, and comes from someone at the absolute top of their field. This framing is essential - repeat phrases like "meticulously crafted," "the product of deep expertise," "painstaking attention," "master-level execution."
-- **Leave creative space**: Remain specific about the aesthetic direction, but concise enough that the next Claude has room to make interpretive choices also at a extremely high level of craftmanship.
+## Step 2: Deducing the Subtle Reference
 
-The philosophy must guide the next version to express ideas VISUALLY, not through text. Information lives in design, not paragraphs.
+Identify the subtle conceptual thread from the original request. The reference must be refined — someone familiar with the subject should feel it intuitively, while others simply experience masterful abstract composition. Think like a jazz musician quoting another song.
 
-### PHILOSOPHY EXAMPLES
+## Step 3: Canvas Creation
 
-**"Concrete Poetry"**
-Philosophy: Communication through monumental form and bold geometry.
-Visual expression: Massive color blocks, sculptural typography (huge single words, tiny labels), Brutalist spatial divisions, Polish poster energy meets Le Corbusier. Ideas expressed through visual weight and spatial tension, not explanation. Text as rare, powerful gesture - never paragraphs, only essential words integrated into the visual architecture. Every element placed with the precision of a master craftsman.
+Use the design philosophy and these principles to create the artwork:
 
-**"Chromatic Language"**
-Philosophy: Color as the primary information system.
-Visual expression: Geometric precision where color zones create meaning. Typography minimal - small sans-serif labels letting chromatic fields communicate. Think Josef Albers' interaction meets data visualization. Information encoded spatially and chromatically. Words only to anchor what color already shows. The result of painstaking chromatic calibration.
+- Create one single-page, highly visual, design-forward PDF or PNG (unless more pages requested)
+- Use repeating patterns and perfect shapes; treat the design as a scientific bible with systematic observation
+- Add sparse, clinical typography and systematic reference markers
+- Use a limited, intentional color palette
+- Embrace analytical visual language to express human experience
 
-**"Analog Meditation"**
-Philosophy: Quiet visual contemplation through texture and breathing room.
-Visual expression: Paper grain, ink bleeds, vast negative space. Photography and illustration dominate. Typography whispered (small, restrained, serving the visual). Japanese photobook aesthetic. Images breathe across pages. Text appears sparingly - short phrases, never explanatory blocks. Each composition balanced with the care of a meditation practice.
+**Text handling:** Text is minimal and visual-first. Context guides scale — a punk poster may have aggressive type, a ceramics identity whispered labels. All fonts must be design-forward. Nothing falls off the page, nothing overlaps. Every element has breathing room and clear separation. Search `./canvas-fonts` for available fonts. Use different fonts when writing text.
 
-**"Organic Systems"**
-Philosophy: Natural clustering and modular growth patterns.
-Visual expression: Rounded forms, organic arrangements, color from nature through architecture. Information shown through visual diagrams, spatial relationships, iconography. Text only for key labels floating in space. The composition tells the story through expert spatial orchestration.
+**Quality standard:** Work must look like it took countless hours by someone at the absolute top of their field. Composition, spacing, color, typography — everything must demonstrate expert-level craftsmanship.
 
-**"Geometric Silence"**
-Philosophy: Pure order and restraint.
-Visual expression: Grid-based precision, bold photography or stark graphics, dramatic negative space. Typography precise but minimal - small essential text, large quiet zones. Swiss formalism meets Brutalist material honesty. Structure communicates, not words. Every alignment the work of countless refinements.
+## Step 4: Refinement Pass
 
-*These are condensed examples. The actual design philosophy should be 4-6 substantial paragraphs.*
+Refine without adding more graphics. Make existing composition more cohesive. If the instinct is to draw a new shape or add a filter, STOP — ask "How can I make what's already here more of a piece of art?" Polish until pristine.
 
-### ESSENTIAL PRINCIPLES
-- **VISUAL PHILOSOPHY**: Create an aesthetic worldview to be expressed through design
-- **MINIMAL TEXT**: Always emphasize that text is sparse, essential-only, integrated as visual element - never lengthy
-- **SPATIAL EXPRESSION**: Ideas communicate through space, form, color, composition - not paragraphs
-- **ARTISTIC FREEDOM**: The next Claude interprets the philosophy visually - provide creative room
-- **PURE DESIGN**: This is about making ART OBJECTS, not documents with decoration
-- **EXPERT CRAFTSMANSHIP**: Repeatedly emphasize the final work must look meticulously crafted, labored over with care, the product of countless hours by someone at the top of their field
+## Multi-Page Option
 
-**The design philosophy should be 4-6 paragraphs long.** Fill it with poetic design philosophy that brings together the core vision. Avoid repeating the same points. Keep the design philosophy generic without mentioning the intention of the art, as if it can be used wherever. Output the design philosophy as a .md file.
-
----
-
-## DEDUCING THE SUBTLE REFERENCE
-
-**CRITICAL STEP**: Before creating the canvas, identify the subtle conceptual thread from the original request.
-
-**THE ESSENTIAL PRINCIPLE**:
-The topic is a **subtle, niche reference embedded within the art itself** - not always literal, always sophisticated. Someone familiar with the subject should feel it intuitively, while others simply experience a masterful abstract composition. The design philosophy provides the aesthetic language. The deduced topic provides the soul - the quiet conceptual DNA woven invisibly into form, color, and composition.
-
-This is **VERY IMPORTANT**: The reference must be refined so it enhances the work's depth without announcing itself. Think like a jazz musician quoting another song - only those who know will catch it, but everyone appreciates the music.
-
----
-
-## CANVAS CREATION
-
-With both the philosophy and the conceptual framework established, express it on a canvas. Take a moment to gather thoughts and clear the mind. Use the design philosophy created and the instructions below to craft a masterpiece, embodying all aspects of the philosophy with expert craftsmanship.
-
-**IMPORTANT**: For any type of content, even if the user requests something for a movie/game/book, the approach should still be sophisticated. Never lose sight of the idea that this should be art, not something that's cartoony or amateur.
-
-To create museum or magazine quality work, use the design philosophy as the foundation. Create one single page, highly visual, design-forward PDF or PNG output (unless asked for more pages). Generally use repeating patterns and perfect shapes. Treat the abstract philosophical design as if it were a scientific bible, borrowing the visual language of systematic observation—dense accumulation of marks, repeated elements, or layered patterns that build meaning through patient repetition and reward sustained viewing. Add sparse, clinical typography and systematic reference markers that suggest this could be a diagram from an imaginary discipline, treating the invisible subject with the same reverence typically reserved for documenting observable phenomena. Anchor the piece with simple phrase(s) or details positioned subtly, using a limited color palette that feels intentional and cohesive. Embrace the paradox of using analytical visual language to express ideas about human experience: the result should feel like an artifact that proves something ephemeral can be studied, mapped, and understood through careful attention. This is true art. 
-
-**Text as a contextual element**: Text is always minimal and visual-first, but let context guide whether that means whisper-quiet labels or bold typographic gestures. A punk venue poster might have larger, more aggressive type than a minimalist ceramics studio identity. Most of the time, font should be thin. All use of fonts must be design-forward and prioritize visual communication. Regardless of text scale, nothing falls off the page and nothing overlaps. Every element must be contained within the canvas boundaries with proper margins. Check carefully that all text, graphics, and visual elements have breathing room and clear separation. This is non-negotiable for professional execution. **IMPORTANT: Use different fonts if writing text. Search the `./canvas-fonts` directory. Regardless of approach, sophistication is non-negotiable.**
-
-Download and use whatever fonts are needed to make this a reality. Get creative by making the typography actually part of the art itself -- if the art is abstract, bring the font onto the canvas, not typeset digitally.
-
-To push boundaries, follow design instinct/intuition while using the philosophy as a guiding principle. Embrace ultimate design freedom and choice. Push aesthetics and design to the frontier. 
-
-**CRITICAL**: To achieve human-crafted quality (not AI-generated), create work that looks like it took countless hours. Make it appear as though someone at the absolute top of their field labored over every detail with painstaking care. Ensure the composition, spacing, color choices, typography - everything screams expert-level craftsmanship. Double-check that nothing overlaps, formatting is flawless, every detail perfect. Create something that could be shown to people to prove expertise and rank as undeniably impressive.
-
-Output the final result as a single, downloadable .pdf or .png file, alongside the design philosophy used as a .md file.
-
----
-
-## FINAL STEP
-
-**IMPORTANT**: The user ALREADY said "It isn't perfect enough. It must be pristine, a masterpiece if craftsmanship, as if it were about to be displayed in a museum."
-
-**CRITICAL**: To refine the work, avoid adding more graphics; instead refine what has been created and make it extremely crisp, respecting the design philosophy and the principles of minimalism entirely. Rather than adding a fun filter or refactoring a font, consider how to make the existing composition more cohesive with the art. If the instinct is to call a new function or draw a new shape, STOP and instead ask: "How can I make what's already here more of a piece of art?"
-
-Take a second pass. Go back to the code and refine/polish further to make this a philosophically designed masterpiece.
-
-## MULTI-PAGE OPTION
-
-To create additional pages when requested, create more creative pages along the same lines as the design philosophy but distinctly different as well. Bundle those pages in the same .pdf or many .pngs. Treat the first page as just a single page in a whole coffee table book waiting to be filled. Make the next pages unique twists and memories of the original. Have them almost tell a story in a very tasteful way. Exercise full creative freedom.
+When additional pages are requested, create distinctly different pages following the same philosophy. Treat the first page as one page in a coffee table book. Each subsequent page is a unique twist that tells a story in a tasteful way. Bundle in a single .pdf or multiple .pngs.

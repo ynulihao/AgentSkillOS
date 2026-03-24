@@ -1,32 +1,13 @@
 ---
 name: tooluniverse
-description: Use this skill when working with scientific research tools and workflows across bioinformatics, cheminformatics, genomics, structural biology, proteomics, and drug discovery. This skill provides access to 600+ scientific tools including machine learning models, datasets, APIs, and analysis packages. Use when searching for scientific tools, executing computational biology workflows, composing multi-step research pipelines, accessing databases like OpenTargets/PubChem/UniProt/PDB/ChEMBL, performing tool discovery for research tasks, or integrating scientific computational resources into LLM workflows.
+description: "Use when searching for, executing, or composing scientific research tools across bioinformatics, cheminformatics, genomics, structural biology, proteomics, and drug discovery. Provides standardized access to 600+ tools including ML models, datasets, and APIs (OpenTargets, PubChem, UniProt, PDB, ChEMBL). Supports tool discovery via keyword/semantic/LLM search, multi-step research pipelines, and MCP integration with Claude."
 ---
 
 # ToolUniverse
 
 ## Overview
 
-ToolUniverse is a unified ecosystem that enables AI agents to function as research scientists by providing standardized access to 600+ scientific resources. Use this skill to discover, execute, and compose scientific tools across multiple research domains including bioinformatics, cheminformatics, genomics, structural biology, proteomics, and drug discovery.
-
-**Key Capabilities:**
-- Access 600+ scientific tools, models, datasets, and APIs
-- Discover tools using natural language, semantic search, or keywords
-- Execute tools through standardized AI-Tool Interaction Protocol
-- Compose multi-step workflows for complex research problems
-- Integration with Claude Desktop/Code via Model Context Protocol (MCP)
-
-## When to Use This Skill
-
-Use this skill when:
-- Searching for scientific tools by function or domain (e.g., "find protein structure prediction tools")
-- Executing computational biology workflows (e.g., disease target identification, drug discovery, genomics analysis)
-- Accessing scientific databases (OpenTargets, PubChem, UniProt, PDB, ChEMBL, KEGG, etc.)
-- Composing multi-step research pipelines (e.g., target discovery → structure prediction → virtual screening)
-- Working with bioinformatics, cheminformatics, or structural biology tasks
-- Analyzing gene expression, protein sequences, molecular structures, or clinical data
-- Performing literature searches, pathway enrichment, or variant annotation
-- Building automated scientific research workflows
+ToolUniverse enables AI agents to discover, execute, and compose 600+ scientific tools across bioinformatics, cheminformatics, genomics, structural biology, proteomics, and drug discovery through a standardized interface.
 
 ## Quick Start
 
@@ -248,43 +229,14 @@ Run examples to understand typical usage patterns and workflow composition.
 
 ## Best Practices
 
-1. **Tool Discovery:**
-   - Start with broad searches, then refine based on results
-   - Use `Tool_Finder_Keyword` for fast searches with known terms
-   - Use `Tool_Finder_LLM` for complex semantic queries
-   - Set appropriate `limit` parameter (default: 10)
-
-2. **Tool Execution:**
-   - Always verify tool parameters before execution
-   - Implement error handling for production workflows
-   - Validate input data formats (SMILES, UniProt IDs, gene symbols)
-   - Check result types and structures
-
-3. **Workflow Composition:**
-   - Test each step individually before composing full workflows
-   - Implement checkpointing for long workflows
-   - Consider rate limits for remote APIs
-   - Use parallel execution when tools are independent
-
-4. **Integration:**
-   - Initialize ToolUniverse once and reuse the instance
-   - Call `load_tools()` once at startup
-   - Cache frequently used tool information
-   - Enable logging for debugging
-
-## Key Terminology
-
-- **Tool**: A scientific resource (model, dataset, API, package) accessible through ToolUniverse
-- **Tool Discovery**: Finding relevant tools using search methods (Finder, LLM, Keyword)
-- **Tool Execution**: Running a tool with specific arguments via `tu.run()`
-- **Tool Composition**: Chaining multiple tools for multi-step workflows
-- **MCP**: Model Context Protocol for integration with Claude Desktop/Code
-- **AI-Tool Interaction Protocol**: Standardized interface for LLM-tool communication
+- **Discovery**: Start broad, refine. Use `Tool_Finder_Keyword` for known terms, `Tool_Finder_LLM` for semantic queries
+- **Execution**: Validate input formats (SMILES, UniProt IDs, gene symbols) before running tools
+- **Composition**: Test steps individually, checkpoint long workflows, respect API rate limits
+- **Integration**: Initialize `ToolUniverse()` once, call `load_tools()` once at startup
 
 ## Resources
 
-- **Official Website**: https://aiscientist.tools
 - **GitHub**: https://github.com/mims-harvard/ToolUniverse
 - **Documentation**: https://zitniklab.hms.harvard.edu/ToolUniverse/
-- **Installation**: `uv uv pip install tooluniverse`
+- **Installation**: `pip install tooluniverse`
 - **MCP Server**: `tooluniverse-smcp`

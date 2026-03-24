@@ -1,11 +1,6 @@
 ---
 name: beads
-description: >
-  Tracks complex, multi-session work using the Beads issue tracker and dependency graphs, and provides
-  persistent memory that survives conversation compaction. Use when work spans multiple sessions, has
-  complex dependencies, or needs persistent context across compaction cycles. Trigger with phrases like
-  "create task for", "what's ready to work on", "show task", "track this work", "what's blocking", or
-  "update status".
+description: "Use when tracking complex, multi-session work with dependency graphs and persistent memory that survives conversation compaction. Provides git-backed issue tracking via the bd CLI with priority management (P0-P4), blocker detection, epic workflows, and audit trails. Trigger phrases: 'create task for', 'what's ready to work on', 'show task', 'track this work', 'what's blocking', 'update status'."
 allowed-tools: "Read,Bash(bd:*)"
 version: "0.34.0"
 author: "Steve Yegge <https://github.com/steveyegge>"
@@ -14,33 +9,11 @@ license: "MIT"
 
 # Beads - Persistent Task Memory for AI Agents
 
-Graph-based issue tracker that survives conversation compaction. Provides persistent memory for multi-session work with complex dependencies.
-
-## Overview
-
 **bd (beads)** replaces markdown task lists with a dependency-aware graph stored in git. Unlike TodoWrite (session-scoped), bd persists across compactions and tracks complex dependencies.
 
-**Key Distinction**:
-- **bd**: Multi-session work, dependencies, survives compaction, git-backed
-- **TodoWrite**: Single-session tasks, linear execution, conversation-scoped
-
-**Core Capabilities**:
-- 📊 **Dependency Graphs**: Track what blocks what (blocks, parent-child, discovered-from, related)
-- 💾 **Compaction Survival**: Tasks persist when conversation history is compacted
-- 🐙 **Git Integration**: Issues versioned in `.beads/issues.jsonl`, sync with `bd sync`
-- 🔍 **Smart Discovery**: Auto-finds ready work (`bd ready`), blocked work (`bd blocked`)
-- 📝 **Audit Trails**: Complete history of status changes, notes, and decisions
-- 🏷️ **Rich Metadata**: Priority (P0-P4), types (bug/feature/task/epic), labels, assignees
-
 **When to Use bd vs TodoWrite**:
-- ❓ "Will I need this context in 2 weeks?" → **YES** = bd
-- ❓ "Could conversation history get compacted?" → **YES** = bd
-- ❓ "Does this have blockers/dependencies?" → **YES** = bd
-- ❓ "Is this fuzzy/exploratory work?" → **YES** = bd
-- ❓ "Will this be done in this session?" → **YES** = TodoWrite
-- ❓ "Is this just a task list for me right now?" → **YES** = TodoWrite
-
-**Decision Rule**: If resuming in 2 weeks would be hard without bd, use bd.
+- "Will I need this context in 2 weeks?" / "Could history get compacted?" / "Does this have blockers?" → **bd**
+- "Will this be done in this session?" / "Simple checklist for right now?" → **TodoWrite**
 
 ## Prerequisites
 
@@ -403,148 +376,49 @@ Shows:
 
 ### Complete Command Reference
 
-| Command | When to Use | Example |
-|---------|-------------|---------|
-| **FIND COMMANDS** | | |
-| `bd ready` | Find unblocked tasks | User asks "what should I work on?" |
-| `bd list` | View all tasks (with filters) | "Show me all open bugs" |
-| `bd show <id>` | Get task details | "Show me task bd-42" |
-| `bd search <query>` | Text search across tasks | "Find tasks about auth" |
-| `bd blocked` | Find stuck work | "What's blocking us?" |
-| `bd stats` | Project metrics | "How many tasks are open?" |
-| **CREATE COMMANDS** | | |
-| `bd create` | Track new work | "Create a task for this bug" |
-| `bd template create` | Use issue template | "Create task from bug template" |
-| `bd init` | Initialize beads | "Set up beads in this repo" (humans only) |
-| **UPDATE COMMANDS** | | |
-| `bd update <id>` | Change status/priority/notes | "Mark as in progress" |
-| `bd dep add` | Link dependencies | "This blocks that" |
-| `bd label add` | Tag with labels | "Label this as backend" |
-| `bd comments add` | Add comment | "Add comment to task" |
-| `bd reopen <id>` | Reopen closed task | "Reopen bd-42, found regression" |
-| `bd rename-prefix` | Rename issue prefix | "Change prefix from bd- to proj-" |
-| `bd epic status` | Check epic progress | "Show epic completion %" |
-| **COMPLETE COMMANDS** | | |
-| `bd close <id>` | Mark task done | "Close this task, it's done" |
-| `bd epic close-eligible` | Auto-close complete epics | "Close epics where all children done" |
-| **SYNC COMMANDS** | | |
-| `bd sync` | Git sync (all-in-one) | "Sync tasks to git" |
-| `bd export` | Export to JSONL | "Backup all tasks" |
-| `bd import` | Import from JSONL | "Restore from backup" |
-| `bd daemon` | Background sync manager | "Start auto-sync daemon" |
-| **CLEANUP COMMANDS** | | |
-| `bd delete <id>` | Delete issues | "Delete test task" (requires --force) |
-| `bd compact` | Archive old closed tasks | "Compress database" |
-| **REPORTING COMMANDS** | | |
-| `bd stats` | Project metrics | "Show project health" |
-| `bd audit record` | Log interactions | "Record this LLM call" |
-| `bd workflow` | Show workflow guide | "How do I use beads?" |
-| **ADVANCED COMMANDS** | | |
-| `bd prime` | Refresh AI context | "Load bd workflow rules" |
-| `bd quickstart` | Interactive tutorial | "Teach me beads basics" |
-| `bd daemons` | Multi-repo daemon mgmt | "Manage all beads daemons" |
-| `bd version` | Version check | "Check bd version" |
-| `bd restore <id>` | Restore compacted issue | "Get full history from git" |
+| Command | Purpose |
+|---------|---------|
+| `bd ready` | Find unblocked tasks |
+| `bd list [--status/--priority/--type/--label]` | View tasks with filters |
+| `bd show <id>` | Get task details and dependency graph |
+| `bd search <query>` | Text search across tasks |
+| `bd blocked` | Find stuck work |
+| `bd stats` | Project metrics and completion rate |
+| `bd create "Title" -p N --type T` | Create task (types: bug/feature/task/epic/chore) |
+| `bd update <id> --status/--notes/-p` | Change status, add notes, or reprioritize |
+| `bd close <id> --reason "..."` | Mark task done |
+| `bd dep add <child> <parent>` | Add dependency (parent blocks child) |
+| `bd label add <id> <label>` | Tag with labels |
+| `bd reopen <id>` | Reopen closed task |
+| `bd epic close-eligible` | Auto-close epics with all children done |
+| `bd sync` | Git sync (export, commit, pull, import, push) |
+| `bd export/import` | JSONL backup/restore |
+| `bd daemon --start/--stop` | Background sync |
+| `bd delete <id> --force` | Delete issues |
+| `bd compact` | Archive old closed tasks |
 
 ---
 
 ## Output
 
-This skill produces:
-
-**Task IDs**: Format `<prefix>-<hash>` (e.g., `claude-code-plugins-abc`, `myproject-xyz`)
-
-**Status Summaries**:
-```
-5 open, 2 in_progress, 1 blocked, 47 closed
-```
-
-**Dependency Graphs** (visual tree):
-```
-myproject-abc: Deploy to production [P0] [blocked]
-  Blocked by:
-    ↳ myproject-def: Run integration tests [P1] [in_progress]
-    ↳ myproject-ghi: Fix failing tests [P1] [open]
-```
-
-**Audit Trails** (complete history):
-```
-2025-12-22 10:00 - Created by alice (P2, task)
-2025-12-22 10:15 - Priority changed: P2 → P0
-2025-12-22 10:30 - Status changed: open → in_progress
-2025-12-22 11:00 - Notes added: "Implemented JWT auth..."
-2025-12-22 14:00 - Status changed: in_progress → blocked
-2025-12-22 14:01 - Notes added: "Blocked: API endpoint returns 503"
-```
+- **Task IDs**: Format `<prefix>-<hash>` (e.g., `myproject-abc`)
+- **Status summaries**: `5 open, 2 in_progress, 1 blocked, 47 closed`
+- **Dependency graphs**: Visual tree showing blockers and dependents
+- **Audit trails**: Complete history of status changes, notes, and decisions
 
 ---
 
 ## Error Handling
 
-### Common Failures
-
-#### 1. `bd: command not found`
-**Cause**: bd CLI not installed or not in PATH
-**Solution**: Install from https://github.com/steveyegge/beads
-```bash
-# macOS/Linux
-curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
-
-# Or via npm
-npm install -g @beads/bd
-
-# Or via Homebrew
-brew install steveyegge/beads/bd
-```
-
-#### 2. `No .beads database found`
-**Cause**: beads not initialized in this repository
-**Solution**: Run `bd init` (humans do this once, not agents)
-```bash
-bd init  # Creates .beads/ directory
-```
-
-#### 3. `Task not found: <id>`
-**Cause**: Invalid task ID or task doesn't exist
-**Solution**: Use `bd list` to see all tasks and verify ID format
-```bash
-bd list                    # See all tasks
-bd search <partial-title>  # Find task by title
-```
-
-#### 4. `Circular dependency detected`
-**Cause**: Attempting to create a dependency cycle (A blocks B, B blocks A)
-**Solution**: bd prevents circular dependencies automatically. Restructure dependency graph.
-```bash
-bd dep list <id>  # View current dependencies
-```
-
-#### 5. Git merge conflicts in `.beads/issues.jsonl`
-**Cause**: Multiple users modified same issue
-**Solution**: bd sync handles JSONL conflicts automatically. If manual intervention needed:
-```bash
-# View conflict
-git status
-
-# bd provides conflict resolution tools
-bd sync --merge  # Attempt auto-resolution
-```
-
-#### 6. `Database is locked`
-**Cause**: Daemon or another process has exclusive lock
-**Solution**: Restart daemon or wait for lock to release
-```bash
-bd daemon --stop
-bd daemon --start
-```
-
-#### 7. Sync failures
-**Cause**: Network issues, authentication failures, or git configuration
-**Solution**: Check git remote access and credentials
-```bash
-git fetch  # Test connectivity
-git status # Verify repo state
-```
+| Error | Solution |
+|-------|----------|
+| `bd: command not found` | Install: `npm install -g @beads/bd` or `brew install steveyegge/beads/bd` |
+| `No .beads database found` | Run `bd init` (humans do this once, not agents) |
+| `Task not found: <id>` | Use `bd list` or `bd search <query>` to find correct ID |
+| `Circular dependency detected` | Restructure graph; use `bd dep list <id>` to review |
+| JSONL merge conflicts | `bd sync --merge` for auto-resolution |
+| `Database is locked` | `bd daemon --stop && bd daemon --start` |
+| Sync failures | Check `git fetch` connectivity and credentials |
 
 ---
 
@@ -583,242 +457,41 @@ bd update claude-code-plugins-abc.1 --status in_progress
 
 ### Example 2: Tracking Blocked Work
 
-**Scenario**: Agent discovers API is down during implementation
-
-**Agent Actions**:
 ```bash
-# Mark current task as blocked
-bd update claude-code-plugins-xyz --status blocked --notes "API endpoint /auth returns 503, reported to backend team"
-
-# Create blocker task
-bd create "Fix /auth endpoint 503 error" -p 0 --type bug
-# Returns: claude-code-plugins-blocker
-
-# Link dependency (blocker blocks original task)
-bd dep add claude-code-plugins-xyz claude-code-plugins-blocker
-
-# Find other ready work
-bd ready
-# Shows tasks that aren't blocked - agent can switch to those
+bd update task-xyz --status blocked --notes "API /auth returns 503"
+bd create "Fix /auth endpoint 503 error" -p 0 --type bug  # Returns: blocker-id
+bd dep add task-xyz blocker-id  # Link dependency
+bd ready  # Find other unblocked work
 ```
-
-**Result**: Blocked work documented, agent productive on other tasks.
-
----
 
 ### Example 3: Session Resume After Compaction
 
-**Session 1**:
 ```bash
-bd create "Implement user authentication" -p 1
-bd update myproject-auth --status in_progress
-bd update myproject-auth --notes "COMPLETED: JWT library integrated. IN PROGRESS: Testing token refresh. NEXT: Rate limiting"
-# [Conversation compacted - history deleted]
+# Session 1: Add detailed notes before compaction
+bd update myproject-auth --notes "COMPLETED: JWT integrated. IN PROGRESS: Token refresh. NEXT: Rate limiting"
+# [Conversation compacted]
+
+# Session 2: Full context preserved
+bd ready && bd show myproject-auth  # Notes survive compaction
 ```
-
-**Session 2** (weeks later):
-```bash
-bd ready
-# Shows: myproject-auth [P1] [task] in_progress
-
-bd show myproject-auth
-# Full context preserved:
-#   - Title: Implement user authentication
-#   - Status: in_progress
-#   - Notes: "COMPLETED: JWT library integrated. IN PROGRESS: Testing token refresh. NEXT: Rate limiting"
-#   - No conversation history needed!
-
-# Agent continues exactly where it left off
-bd update myproject-auth --notes "COMPLETED: Token refresh working. IN PROGRESS: Rate limiting implementation"
-```
-
-**Result**: Zero context loss despite compaction.
-
----
-
-### Example 4: Complex Dependencies (3-Level Graph)
-
-**Scenario**: Build feature with prerequisites
-
-```bash
-# Create tasks
-bd create "Deploy to production" -p 0
-# Returns: deploy-prod
-
-bd create "Run integration tests" -p 1
-# Returns: integration-tests
-
-bd create "Fix failing unit tests" -p 1
-# Returns: fix-tests
-
-# Create dependency chain
-bd dep add deploy-prod integration-tests      # Integration blocks deploy
-bd dep add integration-tests fix-tests        # Fixes block integration
-
-# Check what's ready
-bd ready
-# Shows: fix-tests (no blockers)
-# Hides: integration-tests (blocked by fix-tests)
-# Hides: deploy-prod (blocked by integration-tests)
-
-# Work on ready task
-bd update fix-tests --status in_progress
-# ... fix tests ...
-bd close fix-tests --reason "All unit tests passing"
-
-# Check ready again
-bd ready
-# Shows: integration-tests (now unblocked!)
-# Still hides: deploy-prod (still blocked)
-```
-
-**Result**: Dependency chain enforces correct order automatically.
-
----
-
-### Example 5: Team Collaboration (Git Sync)
-
-**Alice's Session**:
-```bash
-bd create "Refactor database layer" -p 1
-bd update db-refactor --status in_progress
-bd update db-refactor --notes "Started: Migrating to Prisma ORM"
-
-# End of day - sync to git
-bd sync
-# Commits tasks to git, pushes to remote
-```
-
-**Bob's Session** (next day):
-```bash
-# Start of day - sync from git
-bd sync
-# Pulls latest tasks from remote
-
-bd ready
-# Shows: db-refactor [P1] [in_progress] (assigned to alice)
-
-# Bob checks status
-bd show db-refactor
-# Sees Alice's notes: "Started: Migrating to Prisma ORM"
-
-# Bob works on different task (no conflicts)
-bd create "Add API rate limiting" -p 2
-bd update rate-limit --status in_progress
-
-# End of day
-bd sync
-# Both Alice's and Bob's tasks synchronized
-```
-
-**Result**: Distributed team coordination through git.
 
 ---
 
 ## Resources
 
-### When to Use bd vs TodoWrite (Decision Tree)
+**Database**: Uses `.beads/` by default. Set `BEADS_DIR=/path/to/alternate/beads` for alternate location.
 
-**Use bd when**:
-- ✅ Work spans multiple sessions or days
-- ✅ Tasks have dependencies or blockers
-- ✅ Need to survive conversation compaction
-- ✅ Exploratory/research work with fuzzy boundaries
-- ✅ Collaboration with team (git sync)
+**Team sync**: Use `bd sync` at session start/end to coordinate through git.
 
-**Use TodoWrite when**:
-- ✅ Single-session linear tasks
-- ✅ Simple checklist for immediate work
-- ✅ All context is in current conversation
-- ✅ Will complete within current session
+### Reference Documentation
 
-**Decision Rule**: If resuming in 2 weeks would be hard without bd, use bd.
-
----
-
-### Essential Commands Quick Reference
-
-Top 10 most-used commands:
-
-| Command | Purpose |
-|---------|---------|
-| `bd ready` | Show tasks ready to work on |
-| `bd create "Title" -p 1` | Create new task |
-| `bd show <id>` | View task details |
-| `bd update <id> --status in_progress` | Start working |
-| `bd update <id> --notes "Progress"` | Add progress notes |
-| `bd close <id> --reason "Done"` | Complete task |
-| `bd dep add <child> <parent>` | Add dependency |
-| `bd list` | See all tasks |
-| `bd search <query>` | Find tasks by keyword |
-| `bd sync` | Sync with git remote |
-
----
-
-### Session Start Protocol (Every Session)
-
-1. **Run** `bd ready` first
-2. **Pick** highest priority ready task
-3. **Run** `bd show <id>` to get full context
-4. **Update** status to `in_progress`
-5. **Add notes** as you work (critical for compaction survival)
-
----
-
-### Database Selection
-
-bd uses `.beads/` directory by default.
-
-**Alternate Database**:
-```bash
-export BEADS_DIR=/path/to/alternate/beads
-bd ready  # Uses alternate database
-```
-
-**Multiple Databases**: Use `BEADS_DIR` to switch between projects.
-
----
-
-### Advanced Features
-
-For complex scenarios, see references:
-
-- **Compaction Strategies**: `{baseDir}/references/ADVANCED_WORKFLOWS.md`
-  - Tier 1/2/ultra compaction for old closed issues
-  - Semantic summarization to reduce database size
-
-- **Epic Management**: `{baseDir}/references/ADVANCED_WORKFLOWS.md`
-  - Nested epics (epics containing epics)
-  - Bulk operations on epic children
-
-- **Template System**: `{baseDir}/references/ADVANCED_WORKFLOWS.md`
-  - Custom issue templates
-  - Template variables and defaults
-
-- **Git Integration**: `{baseDir}/references/GIT_INTEGRATION.md`
-  - Merge conflict resolution
-  - Daemon architecture
-  - Branching strategies
-
-- **Team Collaboration**: `{baseDir}/references/TEAM_COLLABORATION.md`
-  - Multi-user workflows
-  - Worktree support
-  - Prefix strategies
-
----
-
-### Full Documentation
-
-Complete reference: https://github.com/steveyegge/beads
-
-Existing detailed guides:
 - `{baseDir}/references/CLI_REFERENCE.md` - Complete command syntax
 - `{baseDir}/references/WORKFLOWS.md` - Detailed workflow patterns
 - `{baseDir}/references/DEPENDENCIES.md` - Dependency system deep dive
 - `{baseDir}/references/RESUMABILITY.md` - Compaction survival guide
-- `{baseDir}/references/BOUNDARIES.md` - bd vs TodoWrite detailed comparison
-- `{baseDir}/references/STATIC_DATA.md` - Database schema reference
+- `{baseDir}/references/ADVANCED_WORKFLOWS.md` - Compaction, epics, templates
+- `{baseDir}/references/GIT_INTEGRATION.md` - Merge conflicts, daemon, branching
+- `{baseDir}/references/TEAM_COLLABORATION.md` - Multi-user, worktrees, prefixes
+- `{baseDir}/references/BOUNDARIES.md` - bd vs TodoWrite comparison
 
----
-
-**Progressive Disclosure**: This skill provides essential instructions for all 30 beads commands. For advanced topics (compaction, templates, team workflows), see the references directory. Slash commands (`/bd-create`, `/bd-ready`, etc.) remain available as explicit fallback for power users.
+Full documentation: https://github.com/steveyegge/beads

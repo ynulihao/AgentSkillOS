@@ -1,22 +1,22 @@
 ---
 name: resolve-conflicts
-description: Use this skill immediately when the user mentions merge conflicts that need to be resolved. Do not attempt to resolve conflicts directly - invoke this skill first. This skill specializes in providing a structured framework for merging imports, tests, lock files (regeneration), configuration files, and handling deleted-but-modified files with backup and analysis.
+description: "Use when the user has Git merge conflicts to resolve. Provides a plan-first framework for intelligently merging imports, tests, lock files (via regeneration), configuration, code logic, and deleted-but-modified files with backup and analysis. Always invoke this skill before attempting direct conflict resolution."
 ---
 
 # Git Conflict Resolution
 
-Resolve Git merge conflicts by intelligently combining changes from both branches while preserving the intent of both changes. This skill follows a plan-first approach: assess conflicts, create a detailed resolution plan, get approval, then execute.
+Resolve Git merge conflicts by intelligently combining changes from both branches while preserving intent. Follow a plan-first approach: assess, plan, get approval, execute.
 
 ## Core Principles
 
-1. **Plan Before Executing**: Always create a structured resolution plan and get user approval before making changes
-2. **Prefer Both Changes**: Default to keeping both changes unless they directly contradict
-3. **Merge, Don't Choose**: Especially for imports, tests, and configuration
-4. **Regenerate Generated Files**: Never manually merge generated files - always regenerate them from their sources
-5. **Backup Before Resolving**: For deleted-modified files, create backups first
-6. **Validate with Tests**: Always run tests after resolution
-7. **Explain All Resolutions**: For each conflict resolved, provide a one-line explanation of the resolution strategy
-8. **Ask When Unclear**: When the correct resolution isn't clear from the diff, present options to the user and ask for their choice
+1. **Plan before executing** -- Create a resolution plan and get user approval before making changes
+2. **Prefer both changes** -- Default to keeping both unless they directly contradict
+3. **Merge, don't choose** -- Especially for imports, tests, and configuration
+4. **Regenerate generated files** -- Never manually merge lock files or build artifacts
+5. **Backup before resolving** -- Create backups for deleted-modified files first
+6. **Validate with tests** -- Always run tests after resolution
+7. **Explain all resolutions** -- One-line explanation per conflict resolved
+8. **Ask when unclear** -- Present numbered options to the user when resolution isn't obvious
 
 ## Workflow
 

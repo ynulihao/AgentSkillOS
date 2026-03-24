@@ -1,29 +1,11 @@
 ---
 name: microsim-generator
-description: Creates interactive educational MicroSims using the best-matched JavaScript library (p5.js, Chart.js, Plotly, Mermaid, vis-network, vis-timeline, Leaflet, Venn.js). Analyzes user requirements to route to the appropriate visualization type and generates complete MicroSim packages with HTML, JavaScript, CSS, documentation, and metadata.
+description: "Create interactive educational MicroSims by routing requests to the best-matched JavaScript library (p5.js, Chart.js, Plotly, Mermaid, vis-network, vis-timeline, Leaflet, Venn.js). Use when users request interactive visualizations, data charts, timelines, maps, network diagrams, flowcharts, mathematical plots, set diagrams, priority matrices, comparison tables, or custom simulations and animations."
 ---
 
 # MicroSim Generator
 
-## Overview
-
-This meta-skill routes MicroSim creation requests to the appropriate specialized generator based on visualization requirements. It consolidates 13 individual MicroSim generator skills into a single entry point with on-demand loading of specific implementation guides.
-
-## When to Use This Skill
-
-Use this skill when users request:
-
-- Interactive educational visualizations
-- Data visualizations (charts, graphs, plots)
-- Timelines or chronological displays
-- Geographic/map visualizations
-- Network diagrams or concept maps
-- Flowcharts or workflow diagrams
-- Mathematical function plots
-- Set diagrams (Venn)
-- Priority matrices or bubble charts
-- Custom simulations or animations
-- Comparison tables with ratings
+Meta-skill that routes MicroSim creation requests to the appropriate specialized generator. Consolidates 13 individual generator skills into a single entry point with on-demand loading of implementation guides.
 
 ## Step 1: Analyze Request and Match Generator
 
@@ -127,26 +109,7 @@ If the request could match multiple generators:
 | "map" | Geographic (Leaflet) or Concept map (vis-network)? |
 | "visualization" | What type of data? What interaction needed? |
 
-## Available Generators
-
-### Primary Generators
-
-| Generator | Library | Best For |
-|-----------|---------|----------|
-| p5-guide | p5.js | Custom simulations, physics, animations |
-| chartjs-guide | Chart.js | Bar, line, pie, doughnut, radar charts |
-| timeline-guide | vis-timeline | Chronological events, history, schedules |
-| map-guide | Leaflet.js | Geographic data, locations, routes |
-| vis-network-guide | vis-network | Network graphs, dependencies, concept maps |
-| mermaid-guide | Mermaid.js | Flowcharts, workflows, UML diagrams |
-| plotly-guide | Plotly.js | Mathematical function plots |
-| venn-guide | Custom | Set relationships (2-4 sets) |
-| bubble-guide | Chart.js | Priority matrices, multi-dimensional data |
-| causal-loop-guide | vis-network | Systems thinking, feedback loops |
-| comparison-table-guide | Custom | Side-by-side comparisons with ratings |
-| celebration-guide | p5.js | Particle effects, visual feedback |
-
-### Shared Standards
+## Shared Standards
 
 All MicroSims follow these standards regardless of generator:
 
@@ -172,31 +135,7 @@ docs/sims/<microsim-name>/
 - [ ] Educational purpose is clear
 - [ ] Code is well-commented
 
-## Examples
-
-### Example 1: Timeline Request
-**User:** "Create a timeline showing key events in computer history"
-**Routing:** Keywords "timeline", "events", "history" → `references/timeline-guide.md`
-**Action:** Read timeline-guide.md and follow its workflow
-
-### Example 2: Chart Request
-**User:** "Make a bar chart comparing programming language popularity"
-**Routing:** Keywords "bar chart", "comparing" → `references/chartjs-guide.md`
-**Action:** Read chartjs-guide.md and follow its workflow
-
-### Example 3: Custom Simulation
-**User:** "Build an interactive bouncing ball simulation"
-**Routing:** Keywords "interactive", "bouncing", "simulation" → `references/p5-guide.md`
-**Action:** Read p5-guide.md and follow its workflow
-
-### Example 4: Ambiguous Request
-**User:** "Create a graph of our project dependencies"
-**Routing:** "graph" + "dependencies" suggests network → `references/vis-network-guide.md`
-**Action:** Read vis-network-guide.md (but clarify if user meant a chart)
-
 ## Reference Files
-
-For detailed information, consult:
 
 - `references/routing-criteria.md` - Complete scoring methodology for all generators
 - `references/<generator>-guide.md` - Specific implementation guide for each generator
@@ -210,6 +149,5 @@ After creating a MicroSim, add it to the site navigation:
 nav:
   - MicroSims:
     - List of MicroSims: sims/index.md
-    - Existing Sim: sims/existing-sim/index.md
-    - New MicroSim: sims/new-microsim-name/index.md  # Add here
+    - New MicroSim: sims/new-microsim-name/index.md
 ```

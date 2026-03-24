@@ -1,32 +1,26 @@
 ---
 name: internal-comms
-description: A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write some sort of internal communications (status reports, leadership updates, 3P updates, company newsletters, FAQs, incident reports, project updates, etc.).
+description: "Draft internal communications using company-specific formats and tone. Use when writing 3P updates (Progress/Plans/Problems), company newsletters, FAQ responses, status reports, leadership updates, project updates, or incident reports."
 license: Complete terms in LICENSE.txt
 ---
 
-## When to use this skill
-To write internal communications, use this skill for:
-- 3P updates (Progress, Plans, Problems)
-- Company newsletters
-- FAQ responses
-- Status reports
-- Leadership updates
-- Project updates
-- Incident reports
+# Internal Communications
 
-## How to use this skill
+## Workflow
 
-To write any internal communication:
+1. **Identify communication type** -- Match the request to one of the supported formats below
+2. **Load guideline file** -- Read the corresponding template from `examples/` for formatting, tone, and required sections
+3. **Gather content** -- Collect the information needed per the guideline's instructions
+4. **Draft** -- Write following the template structure and company tone
+5. **Validate** -- Confirm all required sections are present and tone matches guidelines
 
-1. **Identify the communication type** from the request
-2. **Load the appropriate guideline file** from the `examples/` directory:
-    - `examples/3p-updates.md` - For Progress/Plans/Problems team updates
-    - `examples/company-newsletter.md` - For company-wide newsletters
-    - `examples/faq-answers.md` - For answering frequently asked questions
-    - `examples/general-comms.md` - For anything else that doesn't explicitly match one of the above
-3. **Follow the specific instructions** in that file for formatting, tone, and content gathering
+## Guideline Files
 
-If the communication type doesn't match any existing guideline, ask for clarification or more context about the desired format.
+| Communication Type | Template File |
+|---|---|
+| 3P updates (Progress, Plans, Problems) | `examples/3p-updates.md` |
+| Company newsletters | `examples/company-newsletter.md` |
+| FAQ responses | `examples/faq-answers.md` |
+| All other internal comms | `examples/general-comms.md` |
 
-## Keywords
-3P updates, company newsletter, company comms, weekly update, faqs, common questions, updates, internal comms
+If the request does not match any existing guideline, ask for clarification about the desired format before proceeding.

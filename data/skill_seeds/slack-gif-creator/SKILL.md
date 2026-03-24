@@ -1,12 +1,19 @@
 ---
 name: slack-gif-creator
-description: Knowledge and utilities for creating animated GIFs optimized for Slack. Provides constraints, validation tools, and animation concepts. Use when users request animated GIFs for Slack like "make me a GIF of X doing Y for Slack."
+description: "Create animated GIFs optimized for Slack emoji and message formats using PIL and the GIFBuilder toolkit. Use when building custom Slack emoji animations, creating reaction GIFs for Slack, generating animated status indicators, or when a user says 'make me a GIF of X for Slack.' Handles frame generation, easing, validation, and file size optimization."
 license: Complete terms in LICENSE.txt
 ---
 
 # Slack GIF Creator
 
-A toolkit providing utilities and knowledge for creating animated GIFs optimized for Slack.
+## Workflow
+
+1. **Determine format** -- Emoji (128x128, <3s) or message GIF (480x480)
+2. **Plan animation** -- Choose animation concept (bounce, pulse, spin, etc.)
+3. **Generate frames** -- Use PIL ImageDraw primitives with GIFBuilder
+4. **Apply easing** -- Use `core.easing.interpolate()` for smooth motion
+5. **Save and validate** -- `builder.save()` with optimization, then `validate_gif()` to confirm Slack-readiness
+6. **Optimize if needed** -- Reduce colors, FPS, or dimensions to meet size constraints
 
 ## Slack Requirements
 
@@ -231,21 +238,11 @@ builder.save(
 )
 ```
 
-## Philosophy
+## Important Notes
 
-This skill provides:
-- **Knowledge**: Slack's requirements and animation concepts
-- **Utilities**: GIFBuilder, validators, easing functions
-- **Flexibility**: Create the animation logic using PIL primitives
-
-It does NOT provide:
-- Rigid animation templates or pre-made functions
-- Emoji font rendering (unreliable across platforms)
-- A library of pre-packaged graphics built into the skill
-
-**Note on user uploads**: This skill doesn't include pre-built graphics, but if a user uploads an image, use PIL to load and work with it - interpret based on their request whether they want it used directly or just as inspiration.
-
-Be creative! Combine concepts (bouncing + rotating, pulsing + sliding, etc.) and use PIL's full capabilities.
+- No pre-built graphics or emoji fonts are included -- draw everything with PIL primitives
+- If a user uploads an image, use PIL to load it and determine from context whether to animate it directly or use it as style inspiration
+- Combine animation concepts for richer results (bounce + rotate, pulse + slide)
 
 ## Dependencies
 

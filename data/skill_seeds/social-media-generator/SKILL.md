@@ -1,152 +1,63 @@
 ---
 name: social-media-generator
-description: This skill should be used when the user requests social media content creation for Twitter, Instagram, LinkedIn, or Facebook. It generates platform-optimized posts and saves them in an organized folder structure with meaningful filenames based on event details.
+description: "Use when the user needs to create social media posts for Twitter, Instagram, LinkedIn, or Facebook. Generates platform-optimized content with proper character limits, hashtag strategies, and tone, then saves posts in an organized folder structure with meaningful filenames."
 ---
 
 # Social Media Generator
 
-## Overview
+Generate platform-optimized social media content for Twitter, Instagram, LinkedIn, and Facebook, saved in an organized directory structure.
 
-This skill enables creation of platform-optimized social media content for Twitter, Instagram, LinkedIn, and Facebook. It automatically generates posts tailored to each platform's best practices and saves them in an organized directory structure.
-
-## When to Use This Skill
-
-Use this skill when the user requests:
-- Creation of social media posts for multiple platforms
-- Content generation for specific events, announcements, or campaigns
-- Platform-specific content optimization
-- Organized storage of social media content
-
-## Core Workflow
+## Workflow
 
 ### Step 1: Gather Information
 
-Collect the following details from the user (ask if not provided):
-- Event/content name
-- Date and time (format: DD-MM-YYYY-HHMM)
+Collect from the user (ask if not provided):
+- Event/content name and date/time (DD-MM-YYYY-HHMM format)
 - Main message or announcement
-- Target audience
-- Key details to include
-- Call-to-action
-- Any specific hashtags or mentions
-- Brand voice/tone preferences
+- Target audience and brand voice/tone
+- Key details, call-to-action, specific hashtags or mentions
 
 ### Step 2: Generate Platform-Specific Content
 
-Create content for each platform using the templates in `assets/`:
+Create content using templates in `assets/`:
 
-**Twitter** (`assets/twitter_template.md`)
-- Keep under 280 characters
-- Concise and punchy
-- 1-3 relevant hashtags
-- Clear call-to-action
-- Consider emojis for engagement
+| Platform | Template | Char Limit | Hashtags | Tone |
+|----------|----------|-----------|----------|------|
+| Twitter | `assets/twitter_template.md` | 280 | 1-3 focused | Casual, punchy, timely |
+| Instagram | `assets/instagram_template.md` | 2,200 (concise preferred) | 5-15 relevant | Visual-first, engaging |
+| LinkedIn | `assets/linkedin_template.md` | 3,000 | 3-5 professional | Professional, value-driven |
+| Facebook | `assets/facebook_template.md` | Under 250 for best engagement | 2-3 | Friendly, conversational |
 
-**Instagram** (`assets/instagram_template.md`)
-- Engaging caption with hook in first line
-- More detailed description
-- 5-15 relevant hashtags
-- Visual-focused messaging
-- Line breaks for readability
-- Encourage engagement
+**Platform-specific guidelines:**
+- **Twitter:** Concise, clear CTA, emojis for engagement
+- **Instagram:** Hook in first line, line breaks for readability, encourage engagement
+- **LinkedIn:** Industry insights, bullet points, discussion-prompting questions
+- **Facebook:** Include event details, encourage comments and shares
 
-**LinkedIn** (`assets/linkedin_template.md`)
-- Professional and informative tone
-- Value-driven content
-- Industry insights or takeaways
-- 3-5 professional hashtags
-- Bullet points for key information
-- Discussion-prompting questions
-
-**Facebook** (`assets/facebook_template.md`)
-- Conversational and engaging
-- Keep concise (under 250 chars for best engagement)
-- 2-3 relevant hashtags
-- Visual-focused
-- Encourage comments and shares
-- Include event details if applicable
-
-### Step 3: Create Organized File Structure
-
-Create the following directory structure in the project:
+### Step 3: Create File Structure and Write
 
 ```
 social-media/
-├── twitter/
-│   └── event-name-DD-MM-YYYY-HHMM.md
-├── instagram/
-│   └── event-name-DD-MM-YYYY-HHMM.md
-├── linkedin/
-│   └── event-name-DD-MM-YYYY-HHMM.md
-└── facebook/
-    └── event-name-DD-MM-YYYY-HHMM.md
+├── twitter/event-name-DD-MM-YYYY-HHMM.md
+├── instagram/event-name-DD-MM-YYYY-HHMM.md
+├── linkedin/event-name-DD-MM-YYYY-HHMM.md
+└── facebook/event-name-DD-MM-YYYY-HHMM.md
 ```
 
-**Filename Format:** `event-name-DD-MM-YYYY-HHMM.md`
-- Use lowercase with hyphens for spaces
-- Include date in format: day-month-year-time
-- Example: `product-launch-15-03-2025-1400.md`
-
-### Step 4: Write Content to Files
-
 For each platform:
-1. Generate platform-optimized content based on the templates
-2. Create the platform-specific subdirectory if it doesn't exist
-3. Write the content to the appropriately named markdown file
-4. Include metadata at the bottom (platform, date, character count)
+1. Create subdirectory if it doesn't exist
+2. Generate content from template
+3. Write to file with lowercase-hyphenated name (e.g., `product-launch-15-03-2025-1400.md`)
+4. Include metadata at bottom (platform, date, character count)
 
-### Step 5: Review and Confirm
+### Step 4: Review and Confirm
 
-After generating all posts:
-1. Provide a summary of created files
-2. Highlight key points for each platform
-3. Note any character count warnings
-4. Offer to make revisions if needed
+1. Provide summary of created files with key points per platform
+2. Flag any character count warnings
+3. Offer revisions
 
-## Content Optimization Guidelines
+## Call-to-Action Best Practices
 
-### Character Limits
-- Twitter: 280 characters
-- Instagram: 2,200 characters (but concise is better)
-- LinkedIn: 3,000 characters
-- Facebook: Unlimited (but under 250 for best engagement)
-
-### Hashtag Strategy
-- Twitter: 1-3 focused hashtags
-- Instagram: 5-15 relevant hashtags
-- LinkedIn: 3-5 professional hashtags
-- Facebook: 2-3 hashtags
-
-### Tone Adaptation
-- Twitter: Casual, conversational, timely
-- Instagram: Visual-first, engaging, lifestyle-focused
-- LinkedIn: Professional, insightful, value-driven
-- Facebook: Friendly, community-focused, conversational
-
-### Call-to-Action Best Practices
-- Make it clear and specific
-- Use action verbs
+- Clear and specific with action verbs
 - Create urgency when appropriate
 - Match platform conventions
-
-## Example Usage
-
-**User Request:**
-"Create social media posts for our product launch event on March 15, 2025 at 2 PM. The product is an AI-powered productivity tool called TaskFlow."
-
-**Execution:**
-1. Gather additional details (key features, target audience, website link)
-2. Generate four platform-specific posts
-3. Create directory structure: `social-media/twitter/`, `social-media/instagram/`, etc.
-4. Write files: `taskflow-launch-15-03-2025-1400.md` in each platform folder
-5. Provide summary with file locations and key points
-
-## Assets
-
-This skill includes template files in the `assets/` directory:
-- `twitter_template.md` - Twitter post structure and best practices
-- `instagram_template.md` - Instagram caption format and guidelines
-- `linkedin_template.md` - LinkedIn post structure and professional tone guide
-- `facebook_template.md` - Facebook post format and engagement tips
-
-These templates serve as reference for platform-specific requirements and best practices when generating content.

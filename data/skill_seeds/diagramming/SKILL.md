@@ -1,41 +1,36 @@
 ---
 name: diagramming
-description: "Create technical diagrams using Mermaid syntax for architecture, sequences, ERDs, flowcharts, and state machines. Use for visualizing system design, data flows, and processes. Triggers: diagram, mermaid, architecture diagram, sequence diagram, flowchart, ERD, entity relationship, state diagram, C4 model, component diagram, visualize, draw."
+description: "Create technical diagrams using Mermaid syntax. Use when visualizing system architecture (C4 model), documenting API request flows (sequence diagrams), modeling database schemas (ERDs), mapping decision logic (flowcharts), or defining state machines. Produces markdown-embedded diagrams for documentation and design reviews."
 ---
 
 # Diagramming
 
-## Overview
+## Workflow
 
-Create clear, maintainable technical diagrams using Mermaid syntax. This skill covers architecture diagrams, sequence diagrams, entity-relationship diagrams, flowcharts, and state diagrams for documenting software systems.
+1. **Select diagram type** -- Match the visualization need to the right Mermaid diagram (see table)
+2. **Define scope** -- One diagram per concept; split complex systems into levels
+3. **Draft structure** -- Identify nodes, relationships, and labels
+4. **Write Mermaid syntax** -- Use the examples below as templates
+5. **Validate** -- Render in a Mermaid-compatible viewer; check readability and label clarity
 
-## Instructions
+## Diagram Type Selection
 
-### 1. Choose the Right Diagram Type
+| Diagram Type | Use When |
+|---|---|
+| C4 Context/Container | Showing system boundaries, services, and external dependencies |
+| Sequence | Documenting request flows, API interactions, async processing |
+| ERD | Modeling database tables, relationships, and cardinality |
+| Flowchart | Mapping decision logic, CI/CD pipelines, process flows |
+| State | Defining state machines, order lifecycles, connection states |
+| Class | Documenting object hierarchies and interfaces |
 
-| Diagram Type    | Use When                                |
-| --------------- | --------------------------------------- |
-| Architecture/C4 | Showing system structure and components |
-| Sequence        | Showing interactions over time          |
-| ERD             | Showing data models and relationships   |
-| Flowchart       | Showing decision logic and processes    |
-| State           | Showing state transitions               |
+## Principles
 
-### 2. General Mermaid Principles
-
-- Keep diagrams focused on one concept
-- Use consistent naming conventions
-- Add descriptive labels to relationships
-- Limit complexity (split large diagrams)
-- Use comments for documentation
-
-## Best Practices
-
-- **Simplicity**: One diagram, one concept
-- **Consistency**: Same naming across related diagrams
-- **Readability**: Left-to-right or top-to-bottom flow
-- **Labels**: Always label relationships and transitions
-- **Context**: Include a title and brief description
+- One diagram, one concept -- split large diagrams into levels
+- Always label relationships and transitions with descriptive text
+- Use consistent naming across related diagrams
+- Prefer left-to-right or top-to-bottom flow for readability
+- Include a title for context
 
 ## Examples
 

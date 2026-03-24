@@ -1,13 +1,13 @@
 ---
 name: transformers
-description: Work with state-of-the-art machine learning models for NLP, computer vision, audio, and multimodal tasks using HuggingFace Transformers. This skill should be used when fine-tuning pre-trained models, performing inference with pipelines, generating text, training sequence models, or working with BERT, GPT, T5, ViT, and other transformer architectures. Covers model loading, tokenization, training with Trainer API, text generation strategies, and task-specific patterns for classification, NER, QA, summarization, translation, and image tasks. (plugin:scientific-packages@claude-scientific-skills)
+description: "Use when fine-tuning pre-trained models, running inference pipelines, generating text, or working with HuggingFace Transformers architectures (BERT, GPT, T5, ViT). Covers tokenization, Trainer API, text generation strategies, and task-specific patterns for classification, NER, QA, summarization, translation, and image tasks."
 ---
 
 # Transformers
 
 ## Overview
 
-The Transformers library provides state-of-the-art machine learning models for NLP, computer vision, audio, and multimodal tasks. Apply this skill for quick inference through pipelines, comprehensive training via the Trainer API, and flexible text generation with various decoding strategies.
+Apply this skill for quick inference through pipelines, model training/fine-tuning via the Trainer API, and text generation with various decoding strategies across NLP, vision, audio, and multimodal tasks.
 
 ## Core Capabilities
 
@@ -299,51 +299,18 @@ model = AutoModelForCausalLM.from_pretrained(
 
 **See:** `scripts/generate_text.py` for generation strategy examples
 
-## Best Practices
-
-1. **Use Auto classes** for flexibility across different model architectures
-2. **Batch processing** for efficiency - process multiple inputs at once
-3. **Device management** - use `device_map="auto"` for automatic placement
-4. **Memory optimization** - enable fp16/bf16 or quantization for large models
-5. **Checkpoint management** - save checkpoints regularly and load best model
-6. **Pipeline for quick tasks** - use pipelines for standard inference tasks
-7. **Custom metrics** - define compute_metrics for task-specific evaluation
-8. **Gradient accumulation** - use for large effective batch sizes on limited memory
-9. **Learning rate warmup** - typically 5-10% of total training steps
-10. **Hub integration** - push trained models to Hub for sharing and versioning
-
 ## Resources
 
 ### scripts/
-Executable Python scripts demonstrating common Transformers workflows:
-
 - `quick_inference.py` - Pipeline examples for NLP, vision, audio, and multimodal tasks
 - `fine_tune_classifier.py` - Complete fine-tuning workflow with Trainer API
 - `generate_text.py` - Text generation with various decoding strategies
 
-Run scripts directly to see examples in action:
-```bash
-python scripts/quick_inference.py
-python scripts/fine_tune_classifier.py
-python scripts/generate_text.py
-```
-
 ### references/
-Comprehensive reference documentation loaded into context as needed:
-
-- `api_reference.md` - Core classes and APIs (Auto classes, Trainer, GenerationConfig, etc.)
-- `pipelines.md` - All available pipelines organized by modality with examples
+- `api_reference.md` - Core classes and APIs (Auto classes, Trainer, GenerationConfig)
+- `pipelines.md` - All available pipelines organized by modality
 - `training.md` - Training patterns, TrainingArguments, distributed training, callbacks
-- `generation_strategies.md` - Text generation methods, decoding strategies, parameters
-- `task_patterns.md` - Complete workflows for common tasks (classification, NER, QA, summarization, etc.)
+- `generation_strategies.md` - Text generation methods, decoding strategies
+- `task_patterns.md` - Complete workflows for common tasks (classification, NER, QA, summarization)
 
-When working on specific tasks or features, load the relevant reference file for detailed guidance.
-
-## Additional Information
-
-- **Official Documentation**: https://huggingface.co/docs/transformers/index
-- **Model Hub**: https://huggingface.co/models (1M+ pre-trained models)
-- **Datasets Hub**: https://huggingface.co/datasets
-- **Installation**: `pip install transformers datasets evaluate accelerate`
-- **GPU Support**: Requires PyTorch or TensorFlow with CUDA
-- **Framework Support**: PyTorch (primary), TensorFlow, JAX/Flax
+Load the relevant reference file when working on specific tasks.

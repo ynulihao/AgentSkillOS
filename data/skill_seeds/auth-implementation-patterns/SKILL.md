@@ -1,54 +1,26 @@
 ---
 name: auth-implementation-patterns
-description: Master authentication and authorization patterns including JWT, OAuth2, session management, and RBAC to build secure, scalable access control systems. Use when implementing auth systems, securing APIs, or debugging security issues.
+description: "Implement authentication and authorization patterns including JWT, OAuth2, session management, and RBAC. Use when building login flows, securing APIs with token-based auth, adding social login, implementing role-based access control, designing refresh token rotation, or debugging 401/403 errors in Node.js/Express applications."
 ---
 
 # Authentication & Authorization Implementation Patterns
 
-Build secure, scalable authentication and authorization systems using industry-standard patterns and modern best practices.
+## Workflow
 
-## When to Use This Skill
+1. **Choose strategy** -- Select auth approach based on requirements (see decision table below)
+2. **Implement authentication** -- Build login, token generation, and session management
+3. **Add authorization** -- Layer RBAC, permissions, or ownership checks
+4. **Secure endpoints** -- Apply middleware, rate limiting, and input validation
+5. **Validate** -- Test token expiry, refresh flows, and permission boundaries
 
-- Implementing user authentication systems
-- Securing REST or GraphQL APIs
-- Adding OAuth2/social login
-- Implementing role-based access control (RBAC)
-- Designing session management
-- Migrating authentication systems
-- Debugging auth issues
-- Implementing SSO or multi-tenancy
+## Strategy Selection
 
-## Core Concepts
-
-### 1. Authentication vs Authorization
-
-**Authentication (AuthN)**: Who are you?
-- Verifying identity (username/password, OAuth, biometrics)
-- Issuing credentials (sessions, tokens)
-- Managing login/logout
-
-**Authorization (AuthZ)**: What can you do?
-- Permission checking
-- Role-based access control (RBAC)
-- Resource ownership validation
-- Policy enforcement
-
-### 2. Authentication Strategies
-
-**Session-Based:**
-- Server stores session state
-- Session ID in cookie
-- Traditional, simple, stateful
-
-**Token-Based (JWT):**
-- Stateless, self-contained
-- Scales horizontally
-- Can store claims
-
-**OAuth2/OpenID Connect:**
-- Delegate authentication
-- Social login (Google, GitHub)
-- Enterprise SSO
+| Requirement | Strategy | When to Use |
+|---|---|---|
+| Stateless APIs, microservices | JWT tokens | Horizontal scaling, cross-service auth |
+| Traditional web apps | Sessions + Redis | Server-rendered apps, simple state |
+| Social/enterprise login | OAuth2/OIDC | Google, GitHub, SSO integration |
+| Fine-grained access | RBAC + Permissions | Multi-role systems, resource ownership |
 
 ## JWT Authentication
 
@@ -449,186 +421,28 @@ app.get('/api/users',
 );
 ```
 
-### Pattern 3: Resource Ownership
 
-```typescript
-// Check if user owns resource
-async function requireOwnership(
-    resourceType: 'post' | 'comment',
-    resourceIdParam: string = 'id'
-) {
-    return async (req: Request, res: Response, next: NextFunction) => {
-        if (!req.user) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
+## Security Checklist
 
-        const resourceId = req.params[resourceIdParam];
-
-        // Admins can access anything
-        if (req.user.role === Role.ADMIN) {
-            return next();
-        }
-
-        // Check ownership
-        let resource;
-        if (resourceType === 'post') {
-            resource = await db.posts.findById(resourceId);
-        } else if (resourceType === 'comment') {
-            resource = await db.comments.findById(resourceId);
-        }
-
-        if (!resource) {
-            return res.status(404).json({ error: 'Resource not found' });
-        }
-
-        if (resource.userId !== req.user.userId) {
-            return res.status(403).json({ error: 'Not authorized' });
-        }
-
-        next();
-    };
-}
-
-// Usage
-app.put('/api/posts/:id',
-    authenticate,
-    requireOwnership('post'),
-    async (req, res) => {
-        // User can only update their own posts
-        const post = await db.posts.update(req.params.id, req.body);
-        res.json({ post });
-    }
-);
-```
-
-## Security Best Practices
-
-### Pattern 1: Password Security
-
-```typescript
-import bcrypt from 'bcrypt';
-import { z } from 'zod';
-
-// Password validation schema
-const passwordSchema = z.string()
-    .min(12, 'Password must be at least 12 characters')
-    .regex(/[A-Z]/, 'Password must contain uppercase letter')
-    .regex(/[a-z]/, 'Password must contain lowercase letter')
-    .regex(/[0-9]/, 'Password must contain number')
-    .regex(/[^A-Za-z0-9]/, 'Password must contain special character');
-
-// Hash password
-async function hashPassword(password: string): Promise<string> {
-    const saltRounds = 12;  // 2^12 iterations
-    return bcrypt.hash(password, saltRounds);
-}
-
-// Verify password
-async function verifyPassword(
-    password: string,
-    hash: string
-): Promise<boolean> {
-    return bcrypt.compare(password, hash);
-}
-
-// Registration with password validation
-app.post('/api/auth/register', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        // Validate password
-        passwordSchema.parse(password);
-
-        // Check if user exists
-        const existingUser = await db.users.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ error: 'Email already registered' });
-        }
-
-        // Hash password
-        const passwordHash = await hashPassword(password);
-
-        // Create user
-        const user = await db.users.create({
-            email,
-            passwordHash,
-        });
-
-        // Generate tokens
-        const tokens = generateTokens(user.id, user.email, user.role);
-
-        res.status(201).json({
-            user: { id: user.id, email: user.email },
-            ...tokens,
-        });
-    } catch (error) {
-        if (error instanceof z.ZodError) {
-            return res.status(400).json({ error: error.errors[0].message });
-        }
-        res.status(500).json({ error: 'Registration failed' });
-    }
-});
-```
-
-### Pattern 2: Rate Limiting
-
-```typescript
-import rateLimit from 'express-rate-limit';
-import RedisStore from 'rate-limit-redis';
-
-// Login rate limiter
-const loginLimiter = rateLimit({
-    store: new RedisStore({ client: redisClient }),
-    windowMs: 15 * 60 * 1000,  // 15 minutes
-    max: 5,  // 5 attempts
-    message: 'Too many login attempts, please try again later',
-    standardHeaders: true,
-    legacyHeaders: false,
-});
-
-// API rate limiter
-const apiLimiter = rateLimit({
-    windowMs: 60 * 1000,  // 1 minute
-    max: 100,  // 100 requests per minute
-    standardHeaders: true,
-});
-
-// Apply to routes
-app.post('/api/auth/login', loginLimiter, async (req, res) => {
-    // Login logic
-});
-
-app.use('/api/', apiLimiter);
-```
-
-## Best Practices
-
-1. **Never Store Plain Passwords**: Always hash with bcrypt/argon2
-2. **Use HTTPS**: Encrypt data in transit
-3. **Short-Lived Access Tokens**: 15-30 minutes max
-4. **Secure Cookies**: httpOnly, secure, sameSite flags
-5. **Validate All Input**: Email format, password strength
-6. **Rate Limit Auth Endpoints**: Prevent brute force attacks
-7. **Implement CSRF Protection**: For session-based auth
-8. **Rotate Secrets Regularly**: JWT secrets, session secrets
-9. **Log Security Events**: Login attempts, failed auth
-10. **Use MFA When Possible**: Extra security layer
+- Hash passwords with bcrypt (saltRounds >= 12) or argon2 -- never store plain text
+- Access tokens: 15-30 min expiry; refresh tokens: 7 days, stored hashed in DB
+- Cookies: `httpOnly`, `secure`, `sameSite: 'strict'`
+- Rate limit auth endpoints (5 attempts / 15 min window)
+- Validate all input server-side (email format, password strength via zod)
+- Store JWT in httpOnly cookies, not localStorage (XSS vulnerability)
+- Implement CSRF protection for session-based auth
+- Log all auth events (login, failed attempts, token refresh)
 
 ## Common Pitfalls
 
-- **Weak Passwords**: Enforce strong password policies
-- **JWT in localStorage**: Vulnerable to XSS, use httpOnly cookies
-- **No Token Expiration**: Tokens should expire
-- **Client-Side Auth Checks Only**: Always validate server-side
-- **Insecure Password Reset**: Use secure tokens with expiration
-- **No Rate Limiting**: Vulnerable to brute force
-- **Trusting Client Data**: Always validate on server
+- JWT in localStorage: vulnerable to XSS -- use httpOnly cookies instead
+- Missing token expiration: always set `expiresIn` on both access and refresh tokens
+- Client-only auth checks: always validate server-side with middleware
+- No rate limiting on login: enables brute force attacks
 
 ## Resources
 
-- **references/jwt-best-practices.md**: JWT implementation guide
-- **references/oauth2-flows.md**: OAuth2 flow diagrams and examples
-- **references/session-security.md**: Secure session management
-- **assets/auth-security-checklist.md**: Security review checklist
-- **assets/password-policy-template.md**: Password requirements template
-- **scripts/token-validator.ts**: JWT validation utility
+- `references/jwt-best-practices.md` -- JWT implementation guide
+- `references/oauth2-flows.md` -- OAuth2 flow diagrams
+- `references/session-security.md` -- Secure session management
+- `scripts/token-validator.ts` -- JWT validation utility

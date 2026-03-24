@@ -1,79 +1,18 @@
 ---
 name: statistical-analysis
-description: "Statistical analysis toolkit. Hypothesis tests (t-test, ANOVA, chi-square), regression, correlation, Bayesian stats, power analysis, assumption checks, APA reporting, for academic research."
+description: "Conduct statistical analyses with assumption checking, effect sizes, and APA reporting. Use when running hypothesis tests (t-test, ANOVA, chi-square), performing regression or correlation analysis, conducting Bayesian inference with Bayes Factors, calculating power or required sample sizes, or generating publication-ready statistical reports for academic research."
 ---
 
 # Statistical Analysis
 
-## Overview
+## Workflow
 
-Statistical analysis is a systematic process for testing hypotheses and quantifying relationships. Conduct hypothesis tests (t-test, ANOVA, chi-square), regression, correlation, and Bayesian analyses with assumption checks and APA reporting. Apply this skill for academic research.
-
-## When to Use This Skill
-
-This skill should be used when:
-- Conducting statistical hypothesis tests (t-tests, ANOVA, chi-square)
-- Performing regression or correlation analyses
-- Running Bayesian statistical analyses
-- Checking statistical assumptions and diagnostics
-- Calculating effect sizes and conducting power analyses
-- Reporting statistical results in APA format
-- Analyzing experimental or observational data for research
-
----
-
-## Core Capabilities
-
-### 1. Test Selection and Planning
-- Choose appropriate statistical tests based on research questions and data characteristics
-- Conduct a priori power analyses to determine required sample sizes
-- Plan analysis strategies including multiple comparison corrections
-
-### 2. Assumption Checking
-- Automatically verify all relevant assumptions before running tests
-- Provide diagnostic visualizations (Q-Q plots, residual plots, box plots)
-- Recommend remedial actions when assumptions are violated
-
-### 3. Statistical Testing
-- Hypothesis testing: t-tests, ANOVA, chi-square, non-parametric alternatives
-- Regression: linear, multiple, logistic, with diagnostics
-- Correlations: Pearson, Spearman, with confidence intervals
-- Bayesian alternatives: Bayesian t-tests, ANOVA, regression with Bayes Factors
-
-### 4. Effect Sizes and Interpretation
-- Calculate and interpret appropriate effect sizes for all analyses
-- Provide confidence intervals for effect estimates
-- Distinguish statistical from practical significance
-
-### 5. Professional Reporting
-- Generate APA-style statistical reports
-- Create publication-ready figures and tables
-- Provide complete interpretation with all required statistics
-
----
-
-## Workflow Decision Tree
-
-Use this decision tree to determine your analysis path:
-
-```
-START
-│
-├─ Need to SELECT a statistical test?
-│  └─ YES → See "Test Selection Guide"
-│  └─ NO → Continue
-│
-├─ Ready to check ASSUMPTIONS?
-│  └─ YES → See "Assumption Checking"
-│  └─ NO → Continue
-│
-├─ Ready to run ANALYSIS?
-│  └─ YES → See "Running Statistical Tests"
-│  └─ NO → Continue
-│
-└─ Need to REPORT results?
-   └─ YES → See "Reporting Results"
-```
+1. **Select test** -- Use the test selection guide below to match research question to appropriate test
+2. **Check assumptions** -- Run `comprehensive_assumption_check()` from `scripts/assumption_checks.py` before interpreting results
+3. **Run analysis** -- Execute the statistical test using scipy, statsmodels, or pingouin
+4. **Calculate effect sizes** -- Always report effect sizes with confidence intervals (not just p-values)
+5. **Report results** -- Follow APA format using templates in `references/reporting_standards.md`
+6. **Validate** -- Conduct sensitivity analyses to assess robustness of findings
 
 ---
 
@@ -533,94 +472,23 @@ See `references/bayesian_statistics.md` for comprehensive guidance on:
 
 ---
 
-## Resources
+## Common Pitfalls
 
-This skill includes comprehensive reference materials:
-
-### References Directory
-
-- **test_selection_guide.md**: Decision tree for choosing appropriate statistical tests
-- **assumptions_and_diagnostics.md**: Detailed guidance on checking and handling assumption violations
-- **effect_sizes_and_power.md**: Calculating, interpreting, and reporting effect sizes; conducting power analyses
-- **bayesian_statistics.md**: Complete guide to Bayesian analysis methods
-- **reporting_standards.md**: APA-style reporting guidelines with examples
-
-### Scripts Directory
-
-- **assumption_checks.py**: Automated assumption checking with visualizations
-  - `comprehensive_assumption_check()`: Complete workflow
-  - `check_normality()`: Normality testing with Q-Q plots
-  - `check_homogeneity_of_variance()`: Levene's test with box plots
-  - `check_linearity()`: Regression linearity checks
-  - `detect_outliers()`: IQR and z-score outlier detection
+- **P-hacking**: Do not test multiple ways until something is significant
+- **Ignoring assumptions**: Always check and report violations
+- **Confusing significance with importance**: p < .05 does not mean a meaningful effect
+- **Missing effect sizes**: Always report with confidence intervals
+- **Misinterpreting p-values**: Not the probability that the hypothesis is true
+- **Multiple comparisons**: Correct for family-wise error when appropriate
+- **Ignoring missing data**: Understand mechanism (MCAR, MAR, MNAR)
 
 ---
 
-## Best Practices
+## Reference Files
 
-1. **Pre-register analyses** when possible to distinguish confirmatory from exploratory
-2. **Always check assumptions** before interpreting results
-3. **Report effect sizes** with confidence intervals
-4. **Report all planned analyses** including non-significant results
-5. **Distinguish statistical from practical significance**
-6. **Visualize data** before and after analysis
-7. **Check diagnostics** for regression/ANOVA (residual plots, VIF, etc.)
-8. **Conduct sensitivity analyses** to assess robustness
-9. **Share data and code** for reproducibility
-10. **Be transparent** about violations, transformations, and decisions
-
----
-
-## Common Pitfalls to Avoid
-
-1. **P-hacking**: Don't test multiple ways until something is significant
-2. **HARKing**: Don't present exploratory findings as confirmatory
-3. **Ignoring assumptions**: Check them and report violations
-4. **Confusing significance with importance**: p < .05 ≠ meaningful effect
-5. **Not reporting effect sizes**: Essential for interpretation
-6. **Cherry-picking results**: Report all planned analyses
-7. **Misinterpreting p-values**: They're NOT probability that hypothesis is true
-8. **Multiple comparisons**: Correct for family-wise error when appropriate
-9. **Ignoring missing data**: Understand mechanism (MCAR, MAR, MNAR)
-10. **Overinterpreting non-significant results**: Absence of evidence ≠ evidence of absence
-
----
-
-## Getting Started Checklist
-
-When beginning a statistical analysis:
-
-- [ ] Define research question and hypotheses
-- [ ] Determine appropriate statistical test (use test_selection_guide.md)
-- [ ] Conduct power analysis to determine sample size
-- [ ] Load and inspect data
-- [ ] Check for missing data and outliers
-- [ ] Verify assumptions using assumption_checks.py
-- [ ] Run primary analysis
-- [ ] Calculate effect sizes with confidence intervals
-- [ ] Conduct post-hoc tests if needed (with corrections)
-- [ ] Create visualizations
-- [ ] Write results following reporting_standards.md
-- [ ] Conduct sensitivity analyses
-- [ ] Share data and code
-
----
-
-## Support and Further Reading
-
-For questions about:
-- **Test selection**: See references/test_selection_guide.md
-- **Assumptions**: See references/assumptions_and_diagnostics.md
-- **Effect sizes**: See references/effect_sizes_and_power.md
-- **Bayesian methods**: See references/bayesian_statistics.md
-- **Reporting**: See references/reporting_standards.md
-
-**Key textbooks**:
-- Cohen, J. (1988). *Statistical Power Analysis for the Behavioral Sciences*
-- Field, A. (2013). *Discovering Statistics Using IBM SPSS Statistics*
-- Gelman, A., & Hill, J. (2006). *Data Analysis Using Regression and Multilevel/Hierarchical Models*
-- Kruschke, J. K. (2014). *Doing Bayesian Data Analysis*
-
-**Online resources**:
-- APA Style Guide: https://apastyle.apa.org/
-- Statistical Consulting: Cross Validated (stats.stackexchange.com)
+- `references/test_selection_guide.md` -- Decision tree for choosing statistical tests
+- `references/assumptions_and_diagnostics.md` -- Handling assumption violations
+- `references/effect_sizes_and_power.md` -- Effect size calculation and power analysis
+- `references/bayesian_statistics.md` -- Bayesian analysis methods
+- `references/reporting_standards.md` -- APA-style reporting guidelines
+- `scripts/assumption_checks.py` -- Automated assumption checking with visualizations

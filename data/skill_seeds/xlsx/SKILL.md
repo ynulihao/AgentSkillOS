@@ -1,12 +1,14 @@
 ---
 name: xlsx
-description: "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas"
+description: "Use when creating, editing, or analyzing spreadsheets (.xlsx, .xlsm, .csv, .tsv). Supports formula construction with recalculation via LibreOffice, financial model color coding, openpyxl formatting, pandas data analysis, and error verification. Enforces zero formula errors and proper number formatting standards."
 license: Proprietary. LICENSE.txt has complete terms
 ---
 
-# Requirements for Outputs
+# XLSX Creation, Editing, and Analysis
 
-## All Excel files
+## Requirements for Outputs
+
+### All Excel files
 
 ### Zero Formula Errors
 - Every Excel model MUST be delivered with ZERO formula errors (#REF!, #DIV/0!, #VALUE!, #N/A, #NAME?)

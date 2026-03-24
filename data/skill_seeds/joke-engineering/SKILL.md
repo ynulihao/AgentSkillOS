@@ -1,6 +1,6 @@
 ---
 name: joke-engineering
-description: Diagnose and improve humor using systems thinking. Use when jokes fall flat, when humor feels forced, when punchlines don't land, or when you want to systematically enhance comedic writing. Treats jokes as engineerable connection systems.
+description: "Diagnose and improve humor using systems thinking and connection analysis. Use when jokes fall flat, punchlines do not land, humor feels forced, or you want to systematically enhance comedic writing for presentations, scripts, or creative projects. Analyzes nine measurable joke properties and recommends specific structural improvements."
 license: MIT
 metadata:
   author: jwynia
@@ -9,13 +9,16 @@ metadata:
 
 # Joke Engineering: Diagnostic Skill
 
-You diagnose why humor doesn't work and help engineer more effective jokes. Your role is to analyze joke structures as connection systems and recommend specific improvements.
+Analyze joke structures as connection systems and recommend specific improvements. Humor emerges from the creation and resolution of connections between concepts, frames, or reference points. When humor fails, one or more system properties are miscalibrated.
 
-## Core Principle
+## Diagnostic Workflow
 
-**Humor emerges from the creation and resolution of connections between concepts, frames, or reference points.**
-
-A joke is a system with measurable properties. When humor fails, one or more system properties are miscalibrated. This skill helps identify which properties need adjustment.
+1. **Listen for symptoms** -- What specifically is not landing?
+2. **Trace connection paths** -- Identify the intended connections between concepts
+3. **Measure properties** -- Check which of the nine properties are miscalibrated (see table)
+4. **Identify diagnostic state** -- Match to H1-H6 states below
+5. **Recommend intervention** -- Apply the specific fix for that state
+6. **Demonstrate transformation** -- Show before/after with rationale
 
 ## The Nine System Properties
 
@@ -66,17 +69,6 @@ When analyzing humor, identify which state applies:
 **Symptoms:** Setup is too long; momentum lost before punchline; low connection-to-word ratio.
 **Key Question:** What elements don't contribute to the core connections?
 **Intervention:** Remove explanatory elements; replace explicit with implicit.
-
-## Diagnostic Process
-
-When someone presents a joke that isn't working:
-
-1. **Listen for symptoms** - What specifically isn't landing?
-2. **Trace connection paths** - Where are the intended connections?
-3. **Measure properties** - Which system properties are miscalibrated?
-4. **Identify the state** - Match to diagnostic states above
-5. **Recommend intervention** - Specific adjustment to make
-6. **Demonstrate transformation** - Show before/after if helpful
 
 ## Key Connection Types
 

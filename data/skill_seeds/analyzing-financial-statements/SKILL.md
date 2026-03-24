@@ -1,69 +1,46 @@
 ---
 name: analyzing-financial-statements
-description: This skill calculates key financial ratios and metrics from financial statement data for investment analysis
+description: "Use when the user provides financial statement data and needs ratio analysis, benchmarking, or performance evaluation. Calculates profitability, liquidity, leverage, efficiency, and valuation ratios from income statements, balance sheets, and cash flow statements, then delivers interpreted results with industry context."
 ---
 
-# Financial Ratio Calculator Skill
+# Financial Ratio Calculator
 
-This skill provides comprehensive financial ratio analysis for evaluating company performance, profitability, liquidity, and valuation.
+Calculate and interpret key financial ratios from statement data for investment analysis and company evaluation.
 
-## Capabilities
+## Workflow
 
-Calculate and interpret:
-- **Profitability Ratios**: ROE, ROA, Gross Margin, Operating Margin, Net Margin
-- **Liquidity Ratios**: Current Ratio, Quick Ratio, Cash Ratio
-- **Leverage Ratios**: Debt-to-Equity, Interest Coverage, Debt Service Coverage
-- **Efficiency Ratios**: Asset Turnover, Inventory Turnover, Receivables Turnover
-- **Valuation Ratios**: P/E, P/B, P/S, EV/EBITDA, PEG
-- **Per-Share Metrics**: EPS, Book Value per Share, Dividend per Share
+1. **Collect financial data** — Accept input as CSV, JSON, text, or Excel containing income statement, balance sheet, and/or cash flow data
+2. **Validate completeness** — Confirm required line items are present for requested ratios; flag missing values
+3. **Calculate ratios** — Run `calculate_ratios.py` against the validated data
+4. **Interpret results** — Run `interpret_ratios.py` to benchmark against industry standards and generate insights
+5. **Deliver output** — Present calculated ratios, benchmarks, trend analysis (if multi-period), and formatted Excel report
 
-## How to Use
+## Ratio Categories
 
-1. **Input Data**: Provide financial statement data (income statement, balance sheet, cash flow)
-2. **Select Ratios**: Specify which ratios to calculate or use "all" for comprehensive analysis
-3. **Interpretation**: The skill will calculate ratios and provide industry-standard interpretations
-
-## Input Format
-
-Financial data can be provided as:
-- CSV with financial line items
-- JSON with structured financial statements
-- Text description of key financial figures
-- Excel files with financial statements
+- **Profitability**: ROE, ROA, Gross Margin, Operating Margin, Net Margin
+- **Liquidity**: Current Ratio, Quick Ratio, Cash Ratio
+- **Leverage**: Debt-to-Equity, Interest Coverage, Debt Service Coverage
+- **Efficiency**: Asset Turnover, Inventory Turnover, Receivables Turnover
+- **Valuation**: P/E, P/B, P/S, EV/EBITDA, PEG
+- **Per-Share**: EPS, Book Value per Share, Dividend per Share
 
 ## Output Format
 
-Results include:
 - Calculated ratios with values
 - Industry benchmark comparisons (when available)
 - Trend analysis (if multiple periods provided)
 - Interpretation and insights
 - Excel report with formatted results
 
-## Example Usage
-
-"Calculate key financial ratios for this company based on the attached financial statements"
-
-"What's the P/E ratio if the stock price is $50 and annual earnings are $2.50 per share?"
-
-"Analyze the liquidity position using the balance sheet data"
-
 ## Scripts
 
 - `calculate_ratios.py`: Main calculation engine for all financial ratios
 - `interpret_ratios.py`: Provides interpretation and benchmarking
 
-## Best Practices
+## Validation Checkpoints
 
-1. Always validate data completeness before calculations
-2. Handle missing values appropriately (use industry averages or exclude)
-3. Consider industry context when interpreting ratios
-4. Include period comparisons for trend analysis
-5. Flag unusual or concerning ratios
-
-## Limitations
-
-- Requires accurate financial data
-- Industry benchmarks are general guidelines
-- Some ratios may not apply to all industries
-- Historical data doesn't guarantee future performance
+1. Verify data completeness before calculations — handle missing values with industry averages or exclusion
+2. Cross-check that balance sheet balances (assets = liabilities + equity)
+3. Consider industry context when interpreting ratios — not all ratios apply to all industries
+4. Flag unusual or concerning ratios for further review
+5. Include period comparisons for trend analysis when multi-period data is available

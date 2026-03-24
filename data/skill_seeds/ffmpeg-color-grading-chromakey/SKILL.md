@@ -1,17 +1,11 @@
 ---
 name: ffmpeg-color-grading-chromakey
-description: Complete color manipulation and green screen effects system. PROACTIVELY activate for: (1) Green screen/chromakey removal, (2) Color grading with LUTs, (3) Color correction (levels, curves, white balance), (4) Colorkey/color removal effects, (5) Hue/saturation manipulation, (6) Color space conversions (BT.709, BT.2020, HDR), (7) Color isolation effects, (8) Teal and orange look, (9) Vintage/film looks, (10) Color keying for transparency. Provides: chromakey and colorkey filters, LUT application (lut3d), curves and levels adjustment, color balance, selective color manipulation, color space handling, HDR tone mapping, professional color grading chains.
+description: "Use when the user needs FFmpeg color manipulation: green screen/chromakey removal, LUT color grading, color correction (curves, levels, white balance), hue/saturation adjustment, color space conversions (BT.709, BT.2020, HDR tone mapping), color isolation effects, or cinematic looks (teal-orange, vintage, film emulation). Provides chromakey/colorkey filters, lut3d, curves, colorbalance, colorchannelmixer, and professional grading chains."
 ---
 
-## CRITICAL GUIDELINES
+## Platform Note
 
-### Windows File Path Requirements
-
-**MANDATORY: Always Use Backslashes on Windows for File Paths**
-
-When using Edit or Write tools on Windows, you MUST use backslashes (`\`) in file paths, NOT forward slashes (`/`).
-
----
+On Windows, always use backslashes (`\`) in file paths when using Edit or Write tools.
 
 ## Quick Reference
 
@@ -24,16 +18,6 @@ When using Edit or Write tools on Windows, you MUST use backslashes (`\`) in fil
 | Adjust saturation | `-vf "eq=saturation=1.5"` |
 | Hue shift | `-vf "hue=h=30"` |
 | White balance | `-vf "colortemperature=6500"` |
-
-## When to Use This Skill
-
-Use for **color manipulation operations**:
-- Removing green/blue screen backgrounds
-- Applying LUT color grading
-- Color correction and enhancement
-- Creating cinematic color looks
-- HDR/SDR conversions
-- Color keying for compositing
 
 ---
 

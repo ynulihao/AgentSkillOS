@@ -1,32 +1,19 @@
 ---
 name: docx
-description: "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks"
+description: "Use when creating, editing, or analyzing Word documents (.docx). Supports tracked changes (redlining), comments, text extraction via pandoc, new document creation with docx-js, and OOXML editing for existing files. Handles legal, academic, and business document workflows with formatting preservation."
 license: Proprietary. LICENSE.txt has complete terms
 ---
 
-# DOCX creation, editing, and analysis
-
-## Overview
-
-A user may ask you to create, edit, or analyze the contents of a .docx file. A .docx file is essentially a ZIP archive containing XML files and other resources that you can read or edit. You have different tools and workflows available for different tasks.
+# DOCX Creation, Editing, and Analysis
 
 ## Workflow Decision Tree
 
-### Reading/Analyzing Content
-Use "Text extraction" or "Raw XML access" sections below
-
-### Creating New Document
-Use "Creating a new Word document" workflow
-
-### Editing Existing Document
-- **Your own document + simple changes**
-  Use "Basic OOXML editing" workflow
-
-- **Someone else's document**
-  Use **"Redlining workflow"** (recommended default)
-
-- **Legal, academic, business, or government docs**
-  Use **"Redlining workflow"** (required)
+1. **Reading/Analyzing** → Use "Text extraction" or "Raw XML access" below
+2. **Creating new document** → Use "Creating a new Word document" workflow
+3. **Editing existing document**:
+   - Your own document + simple changes → "Basic OOXML editing"
+   - Someone else's document → **"Redlining workflow"** (recommended)
+   - Legal, academic, business, or government docs → **"Redlining workflow"** (required)
 
 ## Reading and analyzing content
 

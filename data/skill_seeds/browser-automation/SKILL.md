@@ -1,42 +1,18 @@
 ---
 name: browser-automation
-description: Non-testing browser automation - web scraping, form filling, screenshot capture, PDF generation, workflow automation. For TESTING with Playwright, use e2e-playwright skill instead. Activates for web scraping, form automation, screenshot, PDF, headless browser, Puppeteer, Selenium, automation scripts, data extraction.
+description: "Automate browser workflows using Playwright, Puppeteer, or Selenium. Use when scraping web data, filling forms programmatically, capturing screenshots or PDFs, intercepting network requests, or building headless browser automation scripts. For end-to-end testing, use the e2e-playwright skill instead."
 ---
 
-# Browser Automation Skill
+# Browser Automation
 
-Expert in browser automation using Playwright, Puppeteer, and Selenium. Specializes in UI testing, web scraping, form automation, and automated workflows.
+## Workflow
 
-## Expertise Areas
-
-### 1. Playwright Automation
-- **Browser Control**: Launch, navigate, interact with pages
-- **Element Selection**: CSS selectors, XPath, text-based, data-testid
-- **Actions**: Click, fill, select, hover, drag-and-drop
-- **Waiting Strategies**: waitForSelector, waitForNavigation, waitForTimeout
-- **Network Interception**: Mock APIs, block resources, modify requests
-- **Screenshots & Videos**: Full page, element-specific, video recording
-
-### 2. Testing Frameworks
-- **End-to-End Testing**: Playwright Test, Cypress-like workflows
-- **Visual Regression**: Screenshot comparison, pixel diff analysis
-- **Accessibility Testing**: ARIA validation, keyboard navigation
-- **Performance Testing**: Page load times, Core Web Vitals
-- **Mobile Testing**: Emulate devices, touch gestures
-
-### 3. Web Scraping
-- **Data Extraction**: Parse HTML, extract structured data
-- **Pagination**: Navigate through multi-page results
-- **Dynamic Content**: Handle lazy loading, infinite scroll
-- **Authentication**: Login flows, session management
-- **Rate Limiting**: Throttle requests, respect robots.txt
-
-### 4. Form Automation
-- **Input Fields**: Text, email, password, number inputs
-- **Selections**: Dropdowns, radio buttons, checkboxes
-- **File Uploads**: Single and multiple file uploads
-- **Date Pickers**: Custom date widgets
-- **Multi-Step Forms**: Wizard-style form flows
+1. **Launch browser** -- Choose headless/headful mode, set viewport and context
+2. **Navigate and wait** -- Go to URL, wait for `networkidle` or specific selectors
+3. **Select elements** -- Use `data-testid` (preferred), CSS selectors, or Playwright locators
+4. **Perform actions** -- Click, fill, select, upload files, intercept network
+5. **Extract or capture** -- Scrape data, take screenshots, generate PDFs
+6. **Clean up** -- Close browser in `finally` block to prevent resource leaks
 
 ## Code Examples
 
@@ -287,28 +263,8 @@ await Promise.all([
 ]);
 ```
 
-## Activation Keywords
-
-Ask me about:
-- "How do I automate browser testing with Playwright?"
-- "Web scraping with Playwright/Puppeteer"
-- "Screenshot automation and visual regression"
-- "Form filling automation"
-- "Element selection strategies"
-- "Handling dynamic content in web automation"
-- "Best practices for UI testing"
-- "Debugging Playwright tests"
-
 ## Related Skills
 
-- **E2E Testing**: `e2e-playwright` skill
-- **Frontend Development**: `frontend` skill for understanding DOM structure
-- **API Testing**: `api-testing` skill for mocking network requests
-
-## Tools & Frameworks
-
-- **Playwright**: Modern browser automation (recommended)
-- **Puppeteer**: Chrome/Chromium-specific automation
-- **Selenium**: Legacy cross-browser automation
-- **Playwright Test**: Full testing framework
-- **Cypress**: Alternative E2E testing framework
+- `e2e-playwright` -- End-to-end testing with Playwright Test
+- `frontend` -- Understanding DOM structure
+- `api-testing` -- Mocking network requests
